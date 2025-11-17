@@ -12,7 +12,7 @@ services:
             - db
         environment:
             DB_CONNECTION: mysql
-            DB_HOST: db 
+            DB_HOST: db
             DB_PORT: 3306
             DB_DATABASE: laravel_db
             DB_USERNAME: laravel_user
@@ -30,6 +30,18 @@ services:
             - '3307:3306'
         volumes:
             - db_data:/var/lib/mysql
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            PMA_HOST: db # نام سرویس دیتابیس که باید به آن متصل شود
+            PMA_PORT: 3306 
+            MYSQL_ROOT_PASSWORD: root_password # استفاده از رمز عبور روت دیتابیس
+        ports:
+            - '8080:80' # دسترسی از طریق مرورگر با آدرس http://localhost:8080/
+        depends_on:
+            - db
+        restart: always
 
 volumes:
     db_data:
