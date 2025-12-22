@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('logo_path')->unique()->nullable();
             $table->string('email')->unique()->nullable();
+            $table->string('website')->nullable();
             $table->string('phone')->nullable();
+            $table->string('mobile', 10)->unique()->nullable();
+            $table->text('address')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

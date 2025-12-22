@@ -6,7 +6,6 @@ services:
         ports:
             - '8000:80'
         volumes:
-            # مهمترین خط برای استقلال کدها: اتصال پوشه فعلی (کدهای شما) به داخل کانتینر
             - .:/var/www/html
         depends_on:
             - db
@@ -35,7 +34,7 @@ services:
         image: phpmyadmin/phpmyadmin
         environment:
             PMA_HOST: db # نام سرویس دیتابیس که باید به آن متصل شود
-            PMA_PORT: 3306 
+            PMA_PORT: 3306
             MYSQL_ROOT_PASSWORD: root_password # استفاده از رمز عبور روت دیتابیس
         ports:
             - '8080:80' # دسترسی از طریق مرورگر با آدرس http://localhost:8080/
