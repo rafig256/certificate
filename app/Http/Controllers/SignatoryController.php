@@ -19,7 +19,7 @@ class SignatoryController extends Controller
     // فرم ایجاد Signatory جدید
     public function create()
     {
-        return view('signatories.create');
+        return view('admin.signatories.create');
     }
 
     // ذخیره Signatory جدید
@@ -37,7 +37,7 @@ class SignatoryController extends Controller
 
         Signatory::create($data);
 
-        return redirect()->route('signatories.index')
+        return redirect()->route('admin.signatories.index')
             ->with('success', 'Signatory created successfully.');
     }
 
@@ -46,7 +46,7 @@ class SignatoryController extends Controller
     {
         $this->authorizeUser($signatory);
 
-        return view('signatories.show', compact('signatory'));
+        return view('admin.signatories.show', compact('signatory'));
     }
 
     // فرم ویرایش Signatory
@@ -54,7 +54,7 @@ class SignatoryController extends Controller
     {
         $this->authorizeUser($signatory);
 
-        return view('signatories.edit', compact('signatory'));
+        return view('admin.signatories.edit', compact('signatory'));
     }
 
     // بروزرسانی Signatory
@@ -72,7 +72,7 @@ class SignatoryController extends Controller
 
         $signatory->update($data);
 
-        return redirect()->route('signatories.index')
+        return redirect()->route('admin.signatories.index')
             ->with('success', 'Signatory updated successfully.');
     }
 
@@ -83,14 +83,14 @@ class SignatoryController extends Controller
 
         $signatory->delete();
 
-        return redirect()->route('signatories.index')
+        return redirect()->route('admin.signatories.index')
             ->with('success', 'Signatory deleted successfully.');
     }
 
     // متد خصوصی برای اطمینان از مالکیت Signatory
     private function authorizeUser(Signatory $signatory)
     {
-        if ($signatory->user_id !== Auth::id()) {
+        if ($signatory->user_id !== \Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
     }
