@@ -350,6 +350,18 @@ return [
 
             ],
         ],
+        ['text' => 'امضا کنندگان',
+            'icon' => 'fas fa-fw fa-share',
+            'submenu' => [
+                [
+                    'text' => 'مشاهده امضا کنندگان',
+                    'url' => 'admin/signatories',
+                    'icon' => 'far fa-fw fa-file',
+                ]
+
+            ],
+        ],
+
         [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',

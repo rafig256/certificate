@@ -7,59 +7,91 @@ use Illuminate\Http\Request;
 
 class SignatoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $signatories = Signatory::where('user_id', \Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('admin.signatories.index', compact('signatories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // فرم ایجاد Signatory جدید
     public function create()
     {
-        //
+        return view('signatories.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // ذخیره Signatory جدید
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email|unique:signatories,email',
+            'phone' => 'nullable|string|max:50',
+            'type' => 'required|in:علمی,دولتی,فنی و حرفه ای,پارک علم,سایر',
+            'level' => 'required|integer|min:1|max:10',
+        ]);
+
+        $data['user_id'] = Auth::id();
+
+        Signatory::create($data);
+
+        return redirect()->route('signatories.index')
+            ->with('success', 'Signatory created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // نمایش جزئیات Signatory
     public function show(Signatory $signatory)
     {
-        //
+        $this->authorizeUser($signatory);
+
+        return view('signatories.show', compact('signatory'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // فرم ویرایش Signatory
     public function edit(Signatory $signatory)
     {
-        //
+        $this->authorizeUser($signatory);
+
+        return view('signatories.edit', compact('signatory'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // بروزرسانی Signatory
     public function update(Request $request, Signatory $signatory)
     {
-        //
+        $this->authorizeUser($signatory);
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email|unique:signatories,email,' . $signatory->id,
+            'phone' => 'nullable|string|max:50',
+            'type' => 'required|in:علمی,دولتی,فنی و حرفه ای,پارک علم,سایر',
+            'level' => 'required|integer|min:1|max:10',
+        ]);
+
+        $signatory->update($data);
+
+        return redirect()->route('signatories.index')
+            ->with('success', 'Signatory updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // حذف Signatory
     public function destroy(Signatory $signatory)
     {
-        //
+        $this->authorizeUser($signatory);
+
+        $signatory->delete();
+
+        return redirect()->route('signatories.index')
+            ->with('success', 'Signatory deleted successfully.');
+    }
+
+    // متد خصوصی برای اطمینان از مالکیت Signatory
+    private function authorizeUser(Signatory $signatory)
+    {
+        if ($signatory->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }
