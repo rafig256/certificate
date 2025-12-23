@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>Certificate</b>LTE',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -339,6 +339,14 @@ return [
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
         ],
+        ['text' => 'سازمان ها',
+            'icon' => 'fas fa-fw fa-share',
+            'submenu' => [
+                'text' => 'مشاهده سازمان ها',
+                'url' => 'admin/organizations',
+                'icon' => 'far fa-fw fa-file',
+            ],
+        ],
         [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',
@@ -548,4 +556,4 @@ return [
     */
 
     'livewire' => false,
-];
+    ];
