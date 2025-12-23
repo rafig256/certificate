@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('organizations', OrganizationController::class);
+    Route::resource('signatories', \App\Http\Controllers\SignatoryController::class);
 });
 
 require __DIR__.'/auth.php';

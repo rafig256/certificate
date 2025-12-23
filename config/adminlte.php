@@ -342,9 +342,12 @@ return [
         ['text' => 'سازمان ها',
             'icon' => 'fas fa-fw fa-share',
             'submenu' => [
-                'text' => 'مشاهده سازمان ها',
-                'url' => 'admin/organizations',
-                'icon' => 'far fa-fw fa-file',
+                [
+                    'text' => 'مشاهده سازمان ها',
+                    'url' => 'admin/organizations',
+                    'icon' => 'far fa-fw fa-file',
+                ]
+
             ],
         ],
         [
