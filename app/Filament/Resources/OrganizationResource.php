@@ -28,25 +28,34 @@ class OrganizationResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->label(__('fields.organize_name'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('slug')
                     ->required()
+                    ->label(__('fields.organize_slug'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('logo_path')
+                    ->label(__('fields.logo'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
+                    ->label(__('fields.email'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('website')
+                    ->label(__('fields.website'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('phone')
+                    ->label(__('fields.phone'))
                     ->tel()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('mobile')
+                    ->label(__('fields.mobile'))
                     ->maxLength(10),
                 Forms\Components\Textarea::make('address')
+                    ->label(__('fields.address'))
                     ->columnSpanFull(),
                 Forms\Components\Toggle::make('is_active')
+                    ->label(__('fields.status'))
                     ->required(),
             ]);
     }
@@ -56,29 +65,23 @@ class OrganizationResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('fields.organize_name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('logo_path')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                    ->label(__('fields.organize_slug'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('website')
+                    ->label(__('fields.website'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->label(__('fields.phone'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('mobile')
+                    ->label(__('fields.mobile'))
                     ->searchable(),
                 Tables\Columns\IconColumn::make('is_active')
+                    ->label(__('fields.status'))
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

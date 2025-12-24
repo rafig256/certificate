@@ -13,7 +13,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class UsersRelationManager extends RelationManager
 {
     protected static string $relationship = 'users';
+// عنوان تب یا باکس در صفحه سازمان
+    protected static ?string $title = 'کاربران سازمان';
 
+    // عنوان مدل در دکمه‌ها (مثلاً "اتصال کاربر")
+    protected static ?string $modelLabel = 'کاربر';
     public function form(Form $form): Form
     {
         return $form
