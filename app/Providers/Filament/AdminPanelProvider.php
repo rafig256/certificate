@@ -27,6 +27,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->font('Vazir')
+            ->assets([
+                \Filament\Support\Assets\Css::make('custom-fonts', asset('css/custom-fonts.css')),
+            ])
             ->colors([
                 'primary' => Color::Amber,
             ])
