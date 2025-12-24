@@ -17,6 +17,7 @@ services:
             DB_USERNAME: laravel_user
             DB_PASSWORD: password
         tty: true
+        user: "1000:1000"
 
     db:
         image: mysql:8.0
