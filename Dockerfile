@@ -1,27 +1,23 @@
 FROM php:8.2-apache
 
-# نصب ابزارهای مورد نیاز
+# نصب ابزار کمکی برای نصب اکستنشن‌ها (بسیار قدرتمند و هوشمند)
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions pdo_mysql mbstring zip exif pcntl gd intl
+
+# نصب ابزارهای عمومی سیستم که لاراول/کامپوزر نیاز دارند
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libzip-dev \
-    libonig-dev \
-    libpng-dev \
-    libjpeg-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# نصب اکستنشن‌های PHP مورد نیاز لاراول
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd
-
-# فعال کردن mod_rewrite برای مسیریابی لاراول
+# فعال کردن mod_rewrite
 RUN a2enmod rewrite
 
 # نصب Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# تنظیم دایرکتوری کاری
 WORKDIR /var/www/html
 
-# پیکربندی آپاچی برای اجرای از public
 COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
-RUN service apache2 restart
