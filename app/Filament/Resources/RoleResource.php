@@ -18,12 +18,42 @@ class RoleResource extends Resource
     protected static ?string $model = Role::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'نقش‌ها';
+    protected static ?string $pluralLabel = 'نقش‌ها';
+    protected static ?string $modelLabel = 'نقش';
+    protected static ?string $navigationGroup = 'مدیریت کاربران';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Section::make('اطلاعات نقش')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->label('نام نقش (انگلیسی)')
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->helperText('مثال: admin ، editor ، support'),
+
+                        Forms\Components\TextInput::make('guard_name')
+                            ->label('گارد')
+                            ->default('web')
+                            ->required(),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('دسترسی‌ها')
+                    ->schema([
+                        Forms\Components\CheckboxList::make('permissions')
+                            ->label('انتخاب دسترسی‌ها')
+                            ->relationship(
+                                name: 'permissions',
+                                titleAttribute: 'name'
+                            )
+                            ->columns(3)
+                            ->searchable()
+                            ->bulkToggleable(),
+                    ]),
             ]);
     }
 
@@ -31,18 +61,27 @@ class RoleResource extends Resource
     {
         return $table
             ->columns([
-                //
-            ])
-            ->filters([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->label('نام نقش')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('guard_name')
+                    ->label('گارد')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('permissions.name')
+                    ->label('دسترسی‌ها')
+                    ->badge()
+                    ->separator(',')
+                    ->wrap(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
