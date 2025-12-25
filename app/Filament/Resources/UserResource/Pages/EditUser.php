@@ -21,4 +21,11 @@ class EditUser extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
+    protected function afterSave(): void
+    {
+        $roles = $this->data['roles'] ?? [];
+
+        $this->record->syncRoles($roles);
+    }
 }
