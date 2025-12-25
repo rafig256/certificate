@@ -19,7 +19,14 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users'; // آیکون را به کاربران تغییر دادم
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $modelLabel = 'کاربر';
+    protected static ?string $pluralModelLabel = 'کاربران';
+    protected static ?string $navigationLabel = 'کاربران';
+    protected static ?string $navigationGroup = 'مدیریت کاربران';
+    protected static ?int $navigationSort = 1;
+
+
 
     public static function form(Form $form): Form
     {
@@ -109,6 +116,21 @@ class UserResource extends Resource
     public static function canViewAny(): bool
     {
         return auth()->user()->can('users.view');
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can('users.create');
+    }
+
+    public static function canEdit($record): bool
+    {
+        return auth()->user()->can('users.edit');
+    }
+
+    public static function canDelete($record): bool
+    {
+        return auth()->user()->can('users.delete');
     }
 
 }

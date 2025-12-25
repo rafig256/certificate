@@ -17,11 +17,13 @@ class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
     protected static ?string $navigationLabel = 'نقش‌ها';
     protected static ?string $pluralLabel = 'نقش‌ها';
     protected static ?string $modelLabel = 'نقش';
     protected static ?string $navigationGroup = 'مدیریت کاربران';
+    protected static ?int $navigationSort = 2;
+
 
     public static function form(Form $form): Form
     {
