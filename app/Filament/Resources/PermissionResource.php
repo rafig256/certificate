@@ -18,12 +18,29 @@ class PermissionResource extends Resource
     protected static ?string $model = Permission::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'دسترسی‌ها';
+    protected static ?string $pluralModelLabel = 'دسترسی‌ها';
+    protected static ?string $modelLabel = 'دسترسی';
+    protected static ?string $navigationGroup = 'مدیریت کاربران';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->label('نام دسترسی')
+                    ->required()
+                    ->unique(
+                        table: Permission::class,
+                        column: 'name',
+                        ignoreRecord: true
+                    )
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('guard_name')
+                    ->label('گارد')
+                    ->default('web')
+                    ->required(),
             ]);
     }
 
@@ -31,18 +48,23 @@ class PermissionResource extends Resource
     {
         return $table
             ->columns([
-                //
-            ])
-            ->filters([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->label('نام دسترسی')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('guard_name')
+                    ->label('گارد'),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('تاریخ ایجاد')
+                    ->dateTime('Y-m-d'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
