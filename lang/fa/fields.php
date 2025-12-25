@@ -16,4 +16,8 @@ return [
     'parent_cat' => 'دسته مادر',
     'id' => 'شناسه',
     'created_at' => 'تاریخ ایجاد',
+    'template_name' => 'نام قالب',
+    'color' => 'رنگ',
+    'design_file' => 'فایل طراحی',
+    'updated_at' => 'تاریخ بروزرسانی',
 ];
