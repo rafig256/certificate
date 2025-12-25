@@ -57,6 +57,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->brandName(config('settings.app_name'))
+            ;
     }
 }

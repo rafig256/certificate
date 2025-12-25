@@ -85,20 +85,27 @@ class OrganizationResource extends Resource
                         ignoreRecord: true
                     )
                     ->maxLength(10),
+                Forms\Components\Toggle::make('is_active')
+                    ->label(__('fields.status'))
+                    ->required()
+                    ->inline(false),
                 Forms\Components\Textarea::make('address')
                     ->label(__('fields.address'))
                     ->columnSpanFull(),
-                Forms\Components\Toggle::make('is_active')
-                    ->label(__('fields.status'))
-                    ->required(),
+
                 Repeater::make('users')
+                    ->label(__('fields.select_users'))
                     ->hiddenOn('edit')
+                    ->addActionLabel('افزودن کاربر')
+                    ->columnSpanFull()
                     ->schema([
                         Select::make('user_id')
+                            ->label(__('fields.admin_name'))
                             ->options(User::pluck('name', 'id'))
                             ->required(),
 
                         TextInput::make('role')
+                            ->label(__('fields.admin_role_name'))
                             ->required(),
                     ])
             ]);
