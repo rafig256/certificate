@@ -6,9 +6,11 @@ use App\Filament\Resources\TemplateResource\Pages;
 use App\Filament\Resources\TemplateResource\RelationManagers;
 use App\Models\Template;
 use Filament\Forms;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -32,9 +34,10 @@ class TemplateResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->label(__('fields.template_name')),
-                Forms\Components\TextInput::make('color_scheme')
-                    ->maxLength(255)
-                    ->label(__('fields.color')),
+                ColorPicker::make('color_scheme')
+                    ->label(__('fields.color'))
+                    ->required()
+                    ->default('#1E40AF'),
                 Forms\Components\Textarea::make('design_file')
                     ->columnSpanFull()
                     ->label(__('fields.design_file')),
@@ -48,8 +51,7 @@ class TemplateResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->label(__('fields.template_name')),
-                Tables\Columns\TextColumn::make('color_scheme')
-                    ->searchable()
+                ColorColumn::make('color_scheme')
                     ->label(__('fields.color')),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

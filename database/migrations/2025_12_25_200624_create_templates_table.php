@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('color_scheme')->nullable(); // رنگ بندی قالب
+            $table->string('color_scheme',7)->nullable(); // رنگ بندی قالب
             $table->text('design_file')->nullable(); // می‌تواند مسیر فایل یا JSON طراحی باشد
             $table->timestamps();
         });
