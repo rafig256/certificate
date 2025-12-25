@@ -5,7 +5,11 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OrganizationResource\Pages;
 use App\Filament\Resources\OrganizationResource\RelationManagers;
 use App\Models\Organization;
+use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -28,10 +32,20 @@ class OrganizationResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->unique(
+                        table: Organization::class,
+                        column: 'name',
+                        ignoreRecord: true
+                    )
                     ->label(__('fields.organize_name'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('slug')
                     ->required()
+                    ->unique(
+                        table: Organization::class,
+                        column: 'slug',
+                        ignoreRecord: true
+                    )
                     ->label(__('fields.organize_slug'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('logo_path')
@@ -39,17 +53,37 @@ class OrganizationResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
+                    ->unique(
+                        table: Organization::class,
+                        column: 'email',
+                        ignoreRecord: true
+                    )
                     ->label(__('fields.email'))
                     ->maxLength(255),
                 Forms\Components\TextInput::make('website')
                     ->label(__('fields.website'))
+                    ->unique(
+                        table: Organization::class,
+                        column: 'website',
+                        ignoreRecord: true
+                    )
                     ->maxLength(255),
                 Forms\Components\TextInput::make('phone')
                     ->label(__('fields.phone'))
+                    ->unique(
+                        table: Organization::class,
+                        column: 'phone',
+                        ignoreRecord: true
+                    )
                     ->tel()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('mobile')
                     ->label(__('fields.mobile'))
+                    ->unique(
+                        table: Organization::class,
+                        column: 'mobile',
+                        ignoreRecord: true
+                    )
                     ->maxLength(10),
                 Forms\Components\Textarea::make('address')
                     ->label(__('fields.address'))
@@ -57,6 +91,16 @@ class OrganizationResource extends Resource
                 Forms\Components\Toggle::make('is_active')
                     ->label(__('fields.status'))
                     ->required(),
+                Repeater::make('users')
+                    ->hiddenOn('edit')
+                    ->schema([
+                        Select::make('user_id')
+                            ->options(User::pluck('name', 'id'))
+                            ->required(),
+
+                        TextInput::make('role')
+                            ->required(),
+                    ])
             ]);
     }
 
