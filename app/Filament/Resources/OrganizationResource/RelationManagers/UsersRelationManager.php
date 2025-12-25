@@ -35,14 +35,20 @@ class UsersRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('نام کاربر'),
+                Tables\Columns\TextColumn::make('national_code')->label('کد ملی'),
                 Tables\Columns\TextColumn::make('role')->label('نقش'), // نمایش نقش در جدول
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make() // برای متصل کردن کاربر موجود به سازمان
-                ->form(fn (Tables\Actions\AttachAction $action): array => [
-                    $action->getRecordSelect(),
-                    Forms\Components\TextInput::make('role')->label('نقش'), // مقداردهی پیوت موقع اتچ کردن
-                ]),
+                Tables\Actions\AttachAction::make()
+                    ->label('افزودن کاربر به سازمان')
+                    ->modalHeading('انتخاب کاربر و تعیین نقش')
+                    ->preloadRecordSelect() // این خط باعث می‌شود لیست کاربران قبل از جستجو بارگذاری شود
+                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                        $action->getRecordSelect(), // این فیلد از recordTitleAttribute استفاده می‌کند
+                        Forms\Components\TextInput::make('role')
+                            ->label('نقش')
+                            ->required(),
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(), // ویرایش رکورد پیوت
