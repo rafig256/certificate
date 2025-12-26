@@ -24,7 +24,16 @@ return new class extends Migration
             $table->foreignId('template_id')->constrained('templates')->cascadeOnDelete();
             $table->string('location');
             $table->string('link')->nullable();
-            $table->enum('status', ['Draft', 'Active', 'Completed','canceled'])->default('Draft');
+            $table->enum('status', [
+                'Draft',
+                'PendingPayment',
+                'Active',
+                'Completed',
+                'Canceled',
+            ])->default('Draft');
+            $table->enum('payment_mode', ['OrganizerPays','ParticipantPays','Free']);
+            $table->unsignedBigInteger('price_per_person')->default(0);
+            $table->boolean('has_exam')->default(false);
             $table->timestamps();
         });
     }

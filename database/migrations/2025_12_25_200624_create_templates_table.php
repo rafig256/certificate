@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('color_scheme',7)->nullable(); // رنگ بندی قالب
-            $table->text('design_file')->nullable(); // می‌تواند مسیر فایل یا JSON طراحی باشد
+            $table->json('theme')->nullable();
             $table->timestamps();
         });
     }
