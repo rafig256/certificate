@@ -153,36 +153,27 @@ class EventResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->label(__('fields.title'))
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('category.name')
-                    ->label(__('fields.category'))
-                    ->numeric()
-                    ->sortable(),
+                    ->searchable()
+                    ->formatStateUsing(function ($state, $record) {
+                        return $state . '<br><span class="text-gray-500 text-sm">دسته: ' . $record->category->name . '</span>';
+                    })
+                    ->html(),
 
                 Tables\Columns\TextColumn::make('organizer.name')
                     ->label(__('fields.organizer'))
                     ->numeric()
-                    ->sortable(),
+                    ->formatStateUsing(function ($state, $record){
+                        return $state . '<br><span class="text-gray-500 text-sm">' . $record->location . '</span>';
+                    })
+                    ->html(),
 
                 Tables\Columns\TextColumn::make('start_at')
                     ->label(__('fields.start_at'))
                     ->dateTime('Y/m/d')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('location')
-                    ->label(__('fields.location'))
-                    ->searchable(),
-
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
                     ->label(__('fields.status'))
-                    ->colors([
-                        'secondary' => 'Draft',
-                        'warning'   => 'PendingPayment',
-                        'success'   => 'Active',
-                        'info'      => 'Completed',
-                        'danger'    => 'Canceled',
-                    ])
                     ->formatStateUsing(fn ($state) => match ($state) {
                         'Draft' => __('fields.status_draft'),
                         'PendingPayment' => __('fields.status_pending_payment'),
@@ -194,14 +185,30 @@ class EventResource extends Resource
                 Tables\Columns\IconColumn::make('has_exam')
                     ->label(__('fields.has_exam'))
                     ->boolean(),
+
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make()
+                        ->label('نمایش')
+                        ->button()
+                        ->color('success'),
+
+                    Tables\Actions\EditAction::make()
+                        ->label('ویرایش')
+                        ->button()
+                        ->color('primary'),
+                ])
+                    ->label(__('fields.management'))
+                    ->icon('heroicon-m-ellipsis-vertical')
+                    ->color('info')
+                    ->button()
             ])
+            ->actionsColumnLabel(__('fields.management'))
+
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -222,6 +229,7 @@ class EventResource extends Resource
             'index' => Pages\ListEvents::route('/'),
             'create' => Pages\CreateEvent::route('/create'),
             'edit' => Pages\EditEvent::route('/{record}/edit'),
+            'view' => Pages\EventView::route('/{record}/view'), 
         ];
     }
 }

@@ -45,4 +45,5 @@ return [
     'payment_organizer' => 'پرداخت توسط برگزارکننده',
     'payment_participant' => 'پرداخت توسط شرکت‌کننده',
     'payment_free' => 'رایگان',
+    'management' => 'مدیریت',
 ];
