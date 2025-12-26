@@ -18,4 +18,9 @@ class Signatory extends Model
         return $this->belongsToMany(Event::class)
             ->withTimestamps();
     }
+
+    public function organizations()
+    {
+        return $this->belongsToMany(Organization::class)->withTimestamps();
+    }
 }

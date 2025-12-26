@@ -11,4 +11,8 @@ class Organization extends Model
     {
         return $this->belongsToMany(User::class)->withPivot('role')->withTimestamps();
     }
+
+    public function signatories(){
+        return $this->belongsToMany(Signatory::class)->withTimestamps();
+    }
 }

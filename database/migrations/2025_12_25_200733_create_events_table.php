@@ -29,6 +29,7 @@ return new class extends Migration
                 'PendingPayment',
                 'Active',
                 'Completed',
+                'Closed',
                 'Canceled',
             ])->default('Draft');
             $table->enum('payment_mode', ['OrganizerPays','ParticipantPays','Free']);
