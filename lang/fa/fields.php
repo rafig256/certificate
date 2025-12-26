@@ -41,9 +41,11 @@ return [
     'status_pending_payment' => 'در انتظار پرداخت',
     'status_active' => 'فعال',
     'status_completed' => 'تکمیل شده',
+    'status_closed' => 'بسته شده',
     'status_canceled' => 'لغو شده',
     'payment_organizer' => 'پرداخت توسط برگزارکننده',
     'payment_participant' => 'پرداخت توسط شرکت‌کننده',
     'payment_free' => 'رایگان',
     'management' => 'مدیریت',
+    'times' => 'زمانبندی',
 ];
