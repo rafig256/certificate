@@ -22,6 +22,7 @@ class CategoryResource extends Resource
     protected static ?string $navigationLabel = 'دسته‌ها';
     protected static ?string $pluralLabel = 'دسته‌ها';
     protected static ?string $modelLabel = 'دسته';
+    protected static ?int $navigationSort = 1;
 
 
     public static function form(Form $form): Form

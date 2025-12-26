@@ -23,6 +23,7 @@ class TemplateResource extends Resource
     protected static ?string $modelLabel = 'قالب';
     protected static ?string $navigationGroup = 'مدیریت گواهینامه';
     protected static ?string $pluralModelLabel = 'قالب‌ها';
+    protected static ?int $navigationSort = 2;
     protected static ?string $navigationIcon = 'heroicon-o-paint-brush';
 
 
@@ -38,7 +39,7 @@ class TemplateResource extends Resource
                     ->label(__('fields.color'))
                     ->required()
                     ->default('#1E40AF'),
-                Forms\Components\Textarea::make('design_file')
+                Forms\Components\Textarea::make('theme')
                     ->columnSpanFull()
                     ->label(__('fields.design_file')),
             ]);
