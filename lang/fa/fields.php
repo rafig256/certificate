@@ -37,7 +37,7 @@ return [
     'level_beginner' => 'مبتدی',
     'level_intermediate' => 'متوسط',
     'level_advanced' => 'پیشرفته',
-    'status_draft' => 'پیش‌نویس',
+    'status_draft' => 'برنامه ریزی',
     'status_pending_payment' => 'در انتظار پرداخت',
     'status_active' => 'فعال',
     'status_completed' => 'تکمیل شده',

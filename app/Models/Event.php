@@ -22,4 +22,10 @@ class Event extends Model
     {
         return $this->belongsTo(Template::class);
     }
+
+    public function signatories()
+    {
+        return $this->belongsToMany(Signatory::class)
+            ->withTimestamps();
+    }
 }

@@ -85,9 +85,15 @@ class UserResource extends Resource
                     ->label('تاریخ عضویت')
                     ->dateTime('Y/m/d')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->label('نقش ها')
+                    ->separator(',')
+                    ->wrap()
+                    ->badge(),
                 Tables\Columns\TextColumn::make('national_code')
                     ->label('کد ملی')
                     ->searchable(),
+
             ])
             ->filters([
                 //

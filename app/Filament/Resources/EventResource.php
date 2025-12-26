@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EventResource\Pages;
 use App\Filament\Resources\EventResource\RelationManagers;
+use App\Models\Category;
 use App\Models\Event;
 use Filament\Forms;
 use Filament\Forms\Components\Textarea;
@@ -14,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class EventResource extends Resource
 {
@@ -42,10 +44,18 @@ class EventResource extends Resource
 
                 Forms\Components\Select::make('category_id')
                     ->label(__('fields.category'))
-                    ->relationship('category', 'name')
+                    ->options(fn () => Category::query()
+                        ->orderBy('parent_id')
+                        ->get()
+                        ->mapWithKeys(function ($category) {
+                            $prefix = $category->parent_id ? '— ' : '';
+                            return [$category->id => $prefix . $category->name];
+                        })
+                        ->toArray()
+                    )
                     ->searchable()
-                    ->preload()
                     ->required(),
+
 
                 Forms\Components\Select::make('level')
                     ->label(__('fields.level'))
@@ -86,6 +96,7 @@ class EventResource extends Resource
 
                 TextInput::make('location')
                     ->label(__('fields.location'))
+                    ->placeholder('مجازی یا فیزیکی')
                     ->required()
                     ->maxLength(255),
 
@@ -102,15 +113,23 @@ class EventResource extends Resource
                         'Completed' => __('fields.status_completed'),
                         'Canceled' => __('fields.status_canceled'),
                     ])
+                    ->visibleOn('edit')
                     ->required(),
 
                 Forms\Components\Select::make('payment_mode')
                     ->label(__('fields.payment_mode'))
-                    ->options([
-                        'OrganizerPays' => __('fields.payment_organizer'),
-                        'ParticipantPays' => __('fields.payment_participant'),
-                        'Free' => __('fields.payment_free'),
-                    ])
+                    ->options(function () {
+                        $options = [
+                            'OrganizerPays' => __('fields.payment_organizer'),
+                            'ParticipantPays' => __('fields.payment_participant'),
+                        ];
+
+                        if (Auth::user()?->hasRole('administrator')) {
+                            $options['Free'] = __('fields.payment_free');
+                        }
+
+                        return $options;
+                    })
                     ->required()
                     ->reactive(),
 
@@ -136,53 +155,41 @@ class EventResource extends Resource
                     ->label(__('fields.title'))
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('category_id')
+                Tables\Columns\TextColumn::make('category.name')
                     ->label(__('fields.category'))
                     ->numeric()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('level')
-                    ->label(__('fields.level')),
-
-                Tables\Columns\TextColumn::make('organizer_id')
+                Tables\Columns\TextColumn::make('organizer.name')
                     ->label(__('fields.organizer'))
                     ->numeric()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('start_at')
                     ->label(__('fields.start_at'))
-                    ->dateTime()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('end_at')
-                    ->label(__('fields.end_at'))
-                    ->dateTime()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('template_id')
-                    ->label(__('fields.template'))
-                    ->numeric()
+                    ->dateTime('Y/m/d')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('location')
                     ->label(__('fields.location'))
-                    ->placeholder('مجازی یا فیزیکی')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('link')
-                    ->label(__('fields.link'))
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('status')
-                    ->label(__('fields.status')),
-
-                Tables\Columns\TextColumn::make('payment_mode')
-                    ->label(__('fields.payment_mode')),
-
-                Tables\Columns\TextColumn::make('price_per_person')
-                    ->label(__('fields.price_per_person'))
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\BadgeColumn::make('status')
+                    ->label(__('fields.status'))
+                    ->colors([
+                        'secondary' => 'Draft',
+                        'warning'   => 'PendingPayment',
+                        'success'   => 'Active',
+                        'info'      => 'Completed',
+                        'danger'    => 'Canceled',
+                    ])
+                    ->formatStateUsing(fn ($state) => match ($state) {
+                        'Draft' => __('fields.status_draft'),
+                        'PendingPayment' => __('fields.status_pending_payment'),
+                        'Active' => __('fields.status_active'),
+                        'Completed' => __('fields.status_completed'),
+                        'Canceled' => __('fields.status_canceled'),
+                    }),
 
                 Tables\Columns\IconColumn::make('has_exam')
                     ->label(__('fields.has_exam'))
@@ -192,6 +199,7 @@ class EventResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
