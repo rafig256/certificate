@@ -124,6 +124,7 @@ class EventResource extends Resource
                         'PendingPayment' => __('fields.status_pending_payment'),
                         'Active' => __('fields.status_active'),
                         'Completed' => __('fields.status_completed'),
+                        'Closed' => __('fields.status_closed'),
                         'Canceled' => __('fields.status_canceled'),
                     ])
                     ->visibleOn('edit')
@@ -233,7 +234,7 @@ class EventResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\UsersRelationManager::class,
         ];
     }
 

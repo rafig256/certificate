@@ -48,4 +48,5 @@ return [
     'payment_free' => 'رایگان',
     'management' => 'مدیریت',
     'times' => 'زمانبندی',
+    'national_code' => 'کد ملی',
 ];
