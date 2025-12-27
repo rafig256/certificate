@@ -69,7 +69,20 @@ class EventResource extends Resource
 
                 Forms\Components\Select::make('organizer_id')
                     ->label(__('fields.organizer'))
-                    ->relationship('organizer', 'name')
+                    ->relationship(
+                        name: 'organizer',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: function (Builder $query) {
+                            if (auth()->user()->hasRole('administrator')) {
+                                return; // هیچ فیلتری نزن → همه سازمان‌ها
+                            }
+
+                            $query->whereHas('users', function (Builder $q) {
+                                $q->where('users.id', auth()->id())
+                                    ->where('organization_user.is_admin', true); // یا role=manager
+                            });
+                        }
+                    )
                     ->searchable()
                     ->preload()
                     ->required(),

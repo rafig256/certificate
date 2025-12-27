@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Auth;
 class SignerEventResource extends Resource
 {
     protected static ?string $model = Event::class;
+    protected static ?string $navigationLabel = "امضای رویداد";
+    protected static ?string $modelLabel = "امضای رویداد";
+    protected static ?string $pluralLabel = "امضای رویدادها";
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -30,6 +33,10 @@ class SignerEventResource extends Resource
             ]);
     }
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
     public static function table(Table $table): Table
     {
         return $table
@@ -78,17 +85,42 @@ class SignerEventResource extends Resource
                 Tables\Columns\IconColumn::make('has_exam')
                     ->label(__('fields.has_exam'))
                     ->boolean(),
+
+                TextColumn::make('signatories_count')
+                    ->label('تعداد امضا')
+                    ->alignCenter(),
             ])
             ->actions([
                 Tables\Actions\Action::make('sign')
-                    ->label('امضا')
-                    ->action(function ($record) {
-                        // فقط attach رکورد کافیست، created_at خودکار پر می‌شود
-                        $record->signatories()->attach(Auth::id());
-                    })
+                    ->label('امضا کنید')
+                    ->icon('heroicon-o-pencil-square')
+                    ->color('success')
+                    ->action(fn ($record) =>
+                    $record->signatories()->attach(Auth::id())
+                    )
                     ->requiresConfirmation()
-                    ->visible(fn($record) => !$record->signatories()->where('signatories.id', Auth::id())->exists())
+                    ->visible(fn ($record) =>
+                    ! $record->signatories()
+                        ->where('signatories.id', Auth::id())
+                        ->exists()
+                    ),
+
+                Tables\Actions\Action::make('unsign')
+                    ->label('حذف امضا')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->action(fn ($record) =>
+                    $record->signatories()->detach(Auth::id())
+                    )
+                    ->requiresConfirmation()
+                    ->visible(fn ($record) =>
+                    $record->signatories()
+                        ->where('signatories.id', Auth::id())
+                        ->exists()
+                    ),
             ]);
+
+
     }
 
     public static function getRelations(): array
@@ -98,13 +130,11 @@ class SignerEventResource extends Resource
         ];
     }
 
-    public static function getTableQuery(): Builder
+    public static function getEloquentQuery(): Builder
     {
-        return parent::getTableQuery()
-            ->whereDoesntHave('signatures', function ($query) {
-                $query->where('user_id', Auth::id());
-            })
-            ->whereNotIn('status', ['Closed', 'Canceled','Completed']);
+        return parent::getEloquentQuery()
+            ->withCount('signatories')
+            ->whereNotIn('status', ['Closed', 'Canceled', 'Completed']);
     }
 
     public static function getPages(): array

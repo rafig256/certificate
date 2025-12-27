@@ -25,7 +25,16 @@ class Event extends Model
 
     public function signatories()
     {
-        return $this->belongsToMany(Signatory::class)
-            ->withTimestamps();
+        return $this->belongsToMany(
+            Signatory::class,
+            'event_signatory',      // نام دقیق جدول pivot
+            'event_id',             // FK این مدل
+            'signatory_id'          // FK مدل مقابل
+        )->withTimestamps();
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 }
