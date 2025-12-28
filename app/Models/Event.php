@@ -33,8 +33,7 @@ class Event extends Model
         )->withTimestamps();
     }
 
-    public function users()
-    {
-        return $this->belongsToMany(User::class)->withTimestamps();
+    public function certificates(){
+        return $this->hasMany(Certificate::class);
     }
 }

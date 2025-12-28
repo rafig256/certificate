@@ -83,6 +83,7 @@ class EventView extends ViewRecord
                                 'PendingPayment' => 'warning',
                                 'Active' => 'success',
                                 'Completed' => 'info',
+                                'Closed'=> 'danger',
                                 'Canceled' => 'danger',
                             }),
 

@@ -11,4 +11,14 @@ class CertificateHolder extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function certificate()
+    {
+        return $this->hasMany(Certificate::class);
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
 }
