@@ -6,6 +6,7 @@ use App\Models\CertificateHolder;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Illuminate\Support\Facades\DB;
 
 class CertificatesRelationManager extends RelationManager
 {
@@ -36,10 +37,16 @@ class CertificatesRelationManager extends RelationManager
                         ->toArray();
                 })
 
-                ->getOptionLabelUsing(function ($value) {
-                    $holder = \App\Models\CertificateHolder::find($value);
-                    return $holder ? "{$holder->first_name} {$holder->last_name}" : null;
-                }),
+//                ->getOptionLabelUsing(function ($value) {
+//                    $holder = \App\Models\CertificateHolder::find($value);
+//                    return $holder ? "{$holder->first_name} {$holder->last_name}" : null;
+//                })
+                ->getOptionLabelUsing(fn ($value) =>
+                CertificateHolder::whereKey($value)
+                    ->selectRaw("CONCAT(first_name,' ',last_name) as full_name")
+                    ->value('full_name')
+                )
+            ,
         ]);
     }
 
@@ -93,23 +100,24 @@ class CertificatesRelationManager extends RelationManager
                     ])
                     // ۲. متد جادویی برای مدیریت ذخیره‌سازی سفارشی
                     ->action(function (array $data, RelationManager $livewire) {
-                        // مرحله اول: ساخت دارنده گواهینامه
-                        $holder = CertificateHolder::create([
-                            'first_name'    => $data['first_name'],
-                            'last_name'     => $data['last_name'],
-                            'national_code' => $data['national_code'],
-                            'mobile'        => $data['mobile'],
-                            'email'         => $data['email'],
-                        ]);
+                        DB::transaction(function () use ($data, $livewire){
+                            // مرحله اول: ساخت دارنده گواهبنامه
+                            $holder = CertificateHolder::create([
+                                'first_name'    => $data['first_name'],
+                                'last_name'     => $data['last_name'],
+                                'national_code' => $data['national_code'],
+                                'mobile'        => $data['mobile'],
+                                'email'         => $data['email'],
+                            ]);
 
-                        // مرحله دوم: ساخت گواهینامه و اتصال به رویداد فعلی
-                        $livewire->getRelationship()->create([
-                            'certificate_holder_id' => $holder->id,
+                            // مرحله دوم: ساخت گواهینامه و اتصال به رویداد فعلی
+                            $livewire->getRelationship()->create([
+                                'certificate_holder_id' => $holder->id,
 //                            TODO: dynamization status
-                            'status'    => 'active',
-//                            'issued_at' => now(),
-//                            'serial'    => \Illuminate\Support\Str::random(16),
-                        ]);
+                                'status'    => 'active',
+                            ]);
+                        });
+
                     })
                     ->successNotificationTitle('فرد جدید ثبت و گواهینامه صادر شد'),
 
