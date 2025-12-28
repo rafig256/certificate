@@ -49,4 +49,6 @@ return [
     'management' => 'مدیریت',
     'times' => 'زمانبندی',
     'national_code' => 'کد ملی',
+    'user_name' => 'نام',
+    'last_name' => 'نام خانوادگی',
 ];
