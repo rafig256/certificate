@@ -51,4 +51,9 @@ return [
     'national_code' => 'کد ملی',
     'user_name' => 'نام',
     'last_name' => 'نام خانوادگی',
+    'event_id' => 'رویداد',
+    'certificate_holder_id' => 'دارنده گواهینامه',
+    'serial' => 'شماره سریال',
+    'issued_at' => 'تاریخ صدور',
+    'has_payment_issue' => 'مشکل پرداخت',
 ];
