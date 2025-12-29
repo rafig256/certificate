@@ -14,8 +14,14 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Notifications\Notification;
+
 
 class EventResource extends Resource
 {
@@ -95,9 +101,64 @@ class EventResource extends Resource
                     ->label(__('fields.end_at'))
                     ->required(),
 
-                Forms\Components\Textarea::make('certificate_text')
-                    ->label(__('fields.certificate_text'))
-                    ->required()
+                Section::make(__('fields.certificate_text'))
+                    ->schema([
+                        RichEditor::make('certificate_text')
+                            ->label(__('fields.certificate_text'))
+                            ->required()
+                            ->columnSpanFull()
+                            ->toolbarButtons([
+                                'bold',
+                                'italic',
+                                'underline',
+                                'strike',
+                                'blockquote',
+                                'bulletList',
+                                'orderedList',
+                                'h2',
+                                'h3',
+                                'link',
+                                'undo',
+                                'redo',
+                            ]),
+                        Actions::make([
+                            Action::make('insertToken')
+                                ->label('درج متغیر')
+                                ->icon('heroicon-m-plus')
+                                ->color('info')
+                                ->form([
+                                    Forms\Components\Select::make('token')
+                                        ->label('انتخاب متغیر')
+                                        ->options(function () {
+                                            $tokens = config('certificate_tokens.tokens', []);
+
+                                            // نمایش لیبل فارسی + خود توکن
+                                            return collect($tokens)->mapWithKeys(function ($meta, $key) {
+                                                $label = $meta['label'] ?? $key;
+                                                return [$key => $label . "  ({{{$key}}})"];
+                                            })->toArray();
+                                        })
+                                        ->searchable()
+                                        ->required(),
+                                ])
+                                ->action(function (array $data, callable $get, callable $set) {
+                                    $current = (string) $get('certificate_text');
+                                    $token = '{{' . $data['token'] . '}}';
+
+                                    // اضافه کردن توکن به انتهای متن (ساده و قابل اتکا)
+                                    $new = trim($current) === ''
+                                        ? $token
+                                        : $current . "\n" . $token;
+
+                                    $set('certificate_text', $new);
+
+                                    Notification::make()
+                                        ->title('متغیر درج شد')
+                                        ->success()
+                                        ->send();
+                                }),
+                        ])->columnSpanFull(),
+                    ])
                     ->columnSpanFull(),
 
                 Forms\Components\Select::make('template_id')

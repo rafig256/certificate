@@ -21,7 +21,6 @@ class CertificatePublicController extends Controller
 
         // متن خام (HTML) از event
         $templateHtml = (string) ($event->certificate_text ?? '');
-
         // Context: داده‌هایی که توکن‌ها از آن خوانده می‌شوند
         $context = [
             'holder' => [
@@ -34,6 +33,7 @@ class CertificatePublicController extends Controller
             ],
 
             'event' => [
+                'id'        => $event->id,
                 'title'     => $event?->title,
                 'level'     => $event?->level,
                 'location'     => $event?->location,
@@ -42,11 +42,11 @@ class CertificatePublicController extends Controller
             ],
 
             'organization' => [
-                'name' => $event?->organization?->name,
+                'name' => $event?->organizer?->name,
             ],
 
             'signer' => [
-                'name' => $event?->signer?->name, // اگر رابطه signer داری
+                'name' => $event?->signatories?->pluck('name')->join('، '),
             ],
 
             'certificate' => [
@@ -55,8 +55,9 @@ class CertificatePublicController extends Controller
             ],
         ];
 
+
         $renderedHtml = $renderer->render($templateHtml, $context, [
-            'unknown_token_mode' => 'empty', // یا 'keep'
+            'unknown_token_mode' => 'empty', // or 'keep'
         ]);
 
         return view('certificates.show', [
