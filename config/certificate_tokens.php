@@ -3,41 +3,40 @@
 return [
 
     'tokens' => [
-
         'holder.full_name' => [
             'label' => 'نام کامل شرکت‌کننده',
             'description' => 'نام و نام خانوادگی (ترکیبی)',
-            'path' => 'certificate_holders.full_name',
+            'path' => 'holder.full_name',
         ],
 
         'holder.first_name' => [
             'label' => 'نام',
             'description' => 'نام شرکت‌کننده',
-            'path' => 'certificate_holders.first_name',
+            'path' => 'holder.first_name',
         ],
 
         'holder.last_name' => [
             'label' => 'نام خانوادگی',
             'description' => 'نام خانوادگی شرکت‌کننده',
-            'path' => 'certificate_holders.last_name',
+            'path' => 'holder.last_name',
         ],
 
         'holder.mobile' => [
             'label' => 'موبایل',
             'description' => 'شماره موبایل شرکت‌کننده',
-            'path' => 'certificate_holders.mobile',
+            'path' => 'holder.mobile',
         ],
 
         'holder.national_code' => [
             'label' => 'کد ملی',
             'description' => 'کد ملی شرکت‌کننده (اگر موجود باشد)',
-            'path' => 'certificate_holders.national_code',
+            'path' => 'holder.national_code',
         ],
 
         'holder.issued_at' => [
             'label' => 'تاریخ صدور',
             'description' => 'تاریخ صدور گواهینامه',
-            'path' => 'certificate_holders.issued_at',
+            'path' => 'holder.issued_at',
         ],
 
 
@@ -60,7 +59,7 @@ return [
         ],
 
         'event.status' => [
-            'label' => ',وضعیت رویداد',
+            'label' => 'وضعیت رویداد',
             'description' => 'وضعیت رویداد',
             'path' => 'event.status',
         ],
@@ -77,11 +76,30 @@ return [
             'path' => 'organization.name',
         ],
 
-        'signer.name' => [
-            'label' => 'نام امضا کننده',
-            'description' => 'نام فرد امضا کننده',
-            'path' => 'signer.name',
+        'signatories.first_name' => [
+            'label' => 'نام امضاکننده اول',
+            'description' => 'نام امضاکننده اول رویداد',
+            'path' => 'signatories.first_name',
         ],
+        'signatories.second_name' => [
+            'label' => 'نام امضاکننده دوم',
+            'description' => 'نام امضاکننده دوم رویداد',
+            'path' => 'signatories.second_name',
+        ],
+        'signatories.third_name' => [
+            'label' => 'نام امضاکننده سوم',
+            'description' => 'نام امضاکننده سوم رویداد',
+            'path' => 'signatories.third_name',
+        ],
+
+        [
+            'signatories.count' =>
+            [
+                'label' => 'تعداد امضاکنندگان',
+                'description' => 'تعداد امضاکنندگان',
+                'path' => 'signatories.count',]
+        ],
+
 
         'certificate.serial' => [
             'label' => 'سریال گواهی',

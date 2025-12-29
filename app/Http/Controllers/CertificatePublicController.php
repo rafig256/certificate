@@ -45,16 +45,21 @@ class CertificatePublicController extends Controller
                 'name' => $event?->organizer?->name,
             ],
 
-            'signer' => [
-                'name' => $event?->signatories?->pluck('name')->join('، '),
-            ],
-
             'certificate' => [
                 'serial' => $certificate->serial,
                 'status' => $certificate->status,
             ],
         ];
 
+        $names = $event->signatories->pluck('name')->values();
+
+        $context['signatories'] = [
+            'count' => $names->count(),
+        ];
+
+        foreach (['first', 'second', 'third'] as $i => $key) {
+            $context['signatories']["{$key}_name"] = $names->get($i, '');
+        }
 
         $renderedHtml = $renderer->render($templateHtml, $context, [
             'unknown_token_mode' => 'empty', // or 'keep'
