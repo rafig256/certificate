@@ -6,9 +6,11 @@ use App\Filament\Resources\CertificateResource\Pages;
 use App\Filament\Resources\CertificateResource\RelationManagers;
 use App\Models\Certificate;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -40,31 +42,39 @@ class CertificateResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('event_id')
+                Select::make('event_id')
                     ->label(__('fields.event_id'))
-                    ->required()
-                    ->numeric(),
+                    ->relationship('event', 'title')
+                    ->searchable()
+                    ->preload()
+                    ->disabledOn('edit')
+                    ->required(),
 
-                Forms\Components\TextInput::make('certificate_holder_id')
+                Select::make('certificate_holder_id')
                     ->label(__('fields.certificate_holder_id'))
-                    ->required()
-                    ->numeric(),
+                    ->relationship(
+                        'certificateHolder',
+                        'first_name',
+                        fn (Builder $query) => $query
+                    )
+                    ->getOptionLabelFromRecordUsing(
+                        fn ($record) => $record->full_name
+                    )
+                    ->searchable()
+                    ->preload()
+                    ->disabledOn('edit')
+                    ->required(),
 
-                Forms\Components\TextInput::make('serial')
-                    ->label(__('fields.serial'))
-                    ->required()
-                    ->maxLength(255),
-
-                Forms\Components\DateTimePicker::make('issued_at')
-                    ->label(__('fields.issued_at')),
-
-                Forms\Components\TextInput::make('status')
+                Select::make('status')
                     ->label(__('fields.status'))
-                    ->required(),
+                    ->options([
+                        'draft'   => __('fields.certificate_statuses.draft'),
+                        'active'  => __('fields.certificate_statuses.active'),
+                        'revoked' => __('fields.certificate_statuses.revoked'),
+                    ])
+                    ->required()
+                    ->default('active'),
 
-                Forms\Components\Toggle::make('has_payment_issue')
-                    ->label(__('fields.has_payment_issue'))
-                    ->required(),
             ]);
     }
 
@@ -73,31 +83,39 @@ class CertificateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('event_id')
+                Tables\Columns\TextColumn::make('event.title')
                     ->label(__('fields.event_id'))
-                    ->numeric()
+                    ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('certificate_holder_id')
+                Tables\Columns\TextColumn::make('certificateHolder.full_name')
                     ->label(__('fields.certificate_holder_id'))
-                    ->numeric()
+                    ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('serial')
                     ->label(__('fields.serial'))
-                    ->searchable(),
+                    ->searchable()
+                    ->copyable()
+                    ->copyMessage('شماره سریال کپی شد')
+                    ->copyMessageDuration(1500),
 
                 Tables\Columns\TextColumn::make('issued_at')
                     ->label(__('fields.issued_at'))
-                    ->dateTime()
+                    ->date('Y-m-d')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('status')
-                    ->label(__('fields.status')),
+                TextColumn::make('status')
+                    ->label(__('fields.status'))
+                    ->formatStateUsing(fn (?string $state) => __("fields.certificate_statuses.$state")),
 
                 Tables\Columns\IconColumn::make('has_payment_issue')
                     ->label(__('fields.has_payment_issue'))
-                    ->boolean(),
+                    ->boolean()
+                    ->trueIcon('heroicon-o-x-circle')
+                    ->falseIcon('heroicon-o-check-circle')
+                    ->trueColor('danger')
+                    ->falseColor('success'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('fields.created_at'))

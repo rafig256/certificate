@@ -55,5 +55,10 @@ return [
     'certificate_holder_id' => 'دارنده گواهینامه',
     'serial' => 'شماره سریال',
     'issued_at' => 'تاریخ صدور',
-    'has_payment_issue' => 'مشکل پرداخت',
+    'has_payment_issue' => 'پرداخت',
+    'certificate_statuses' => [
+        'draft'   => 'پیش‌نویس',
+        'active'  => 'فعال',
+        'revoked' => 'لغو شده',
+    ],
 ];
