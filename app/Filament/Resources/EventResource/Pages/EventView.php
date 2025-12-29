@@ -6,11 +6,7 @@ use App\Filament\Resources\EventResource;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Infolists\Infolist;
-use Filament\Infolists\Components\{
-    Section,
-    Grid,
-    IconEntry,
-};
+use Filament\Infolists\Components\{RepeatableEntry, Section, Grid, IconEntry};
 
 
 class EventView extends ViewRecord
@@ -135,6 +131,37 @@ class EventView extends ViewRecord
                             ->label('دارای آزمون')
                             ->boolean(),
                     ]),
+
+                Section::make('امضاکنندگان')
+                    ->schema([
+                        RepeatableEntry::make('signatories')
+                            ->label('')
+                            ->schema([
+                                TextEntry::make('name')
+                                    ->label('نام'),
+
+                                TextEntry::make('email')
+                                    ->label('ایمیل')
+                                    ->visible(fn ($state) => filled($state)),
+
+                                TextEntry::make('phone')
+                                    ->label('تلفن')
+                                    ->visible(fn ($state) => filled($state)),
+
+                                TextEntry::make('type')
+                                    ->label('نوع')
+                                    ->visible(fn ($state) => filled($state)),
+
+                                TextEntry::make('level')
+                                    ->label(__('fields.level'))
+                                    ->visible(fn ($state) => filled($state)),
+                                TextEntry::make('user_id')
+                                    ->label(__('fields.signature_admin_user'))
+                                    ->visible(fn ($state) => filled($state)),
+                            ])
+                            ->columns(2),
+                    ])
+                    ->visible(fn ($record) => $record->signatories()->exists()),
             ]);
     }
 }
