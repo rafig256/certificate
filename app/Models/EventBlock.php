@@ -10,4 +10,8 @@ class EventBlock extends Model
         'payload' => 'array',
         'is_active' => 'boolean',
     ];
+
+    public function event(){
+        return $this->belongsTo(Event::class);
+    }
 }
