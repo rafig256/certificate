@@ -100,67 +100,6 @@ class EventResource extends Resource
                 Forms\Components\DateTimePicker::make('end_at')
                     ->label(__('fields.end_at'))
                     ->required(),
-/**
-                Section::make(__('fields.certificate_text'))
-                    ->schema([
-                        RichEditor::make('certificate_text')
-                            ->label(__('fields.certificate_text'))
-                            ->required()
-                            ->columnSpanFull()
-                            ->toolbarButtons([
-                                'bold',
-                                'italic',
-                                'underline',
-                                'strike',
-                                'blockquote',
-                                'bulletList',
-                                'orderedList',
-                                'h2',
-                                'h3',
-                                'link',
-                                'undo',
-                                'redo',
-                            ]),
-                        Actions::make([
-                            Action::make('insertToken')
-                                ->label('درج متغیر')
-                                ->icon('heroicon-m-plus')
-                                ->color('info')
-                                ->form([
-                                    Forms\Components\Select::make('token')
-                                        ->label('انتخاب متغیر')
-                                        ->options(function () {
-                                            $tokens = config('certificate_tokens.tokens', []);
-
-                                            // نمایش لیبل فارسی + خود توکن
-                                            return collect($tokens)->mapWithKeys(function ($meta, $key) {
-                                                $label = $meta['label'] ?? $key;
-                                                return [$key => $label . "  ({{{$key}}})"];
-                                            })->toArray();
-                                        })
-                                        ->searchable()
-                                        ->required(),
-                                ])
-                                ->action(function (array $data, callable $get, callable $set) {
-                                    $current = (string) $get('certificate_text');
-                                    $token = '{{' . $data['token'] . '}}';
-
-                                    // اضافه کردن توکن به انتهای متن (ساده و قابل اتکا)
-                                    $new = trim($current) === ''
-                                        ? $token
-                                        : $current . "\n" . $token;
-
-                                    $set('certificate_text', $new);
-
-                                    Notification::make()
-                                        ->title('متغیر درج شد')
-                                        ->success()
-                                        ->send();
-                                }),
-                        ])->columnSpanFull(),
-                    ])
-                    ->columnSpanFull(),
-**/
 
                 Section::make('متن گواهینامه')
                     ->schema([
@@ -191,7 +130,7 @@ class EventResource extends Resource
                                     ])
                                     ->required()
                                     ->reactive()
-                                    ->disabled(fn ($record) => $record !== null), // بعد از ایجاد قفل شود
+                                    ->disabled(fn ($record) => $record !== null),
 
                                 Forms\Components\Select::make('align')
                                     ->label('تراز')
@@ -209,6 +148,7 @@ class EventResource extends Resource
                                     ->label('توکن')
                                     ->options(function () {
                                         $tokens = config('certificate_tokens.tokens', []);
+
                                         return collect($tokens)->mapWithKeys(
                                             fn ($meta, $key) => [$key => $meta['label'] ?? $key]
                                         )->toArray();
@@ -228,7 +168,36 @@ class EventResource extends Resource
                                     ->label('متن گواهینامه')
                                     ->columnSpanFull()
                                     ->visible(fn ($get) => $get('type') === 'body_text')
-                                    ->required(fn ($get) => $get('type') === 'body_text'),
+                                    ->required(fn ($get) => $get('type') === 'body_text')
+                                    ->hintActions([
+                                        Forms\Components\Actions\Action::make('insertToken')
+                                            ->label('درج متغیر')
+                                            ->icon('heroicon-m-plus')
+                                            ->color('info')
+                                            ->form([
+                                                Forms\Components\Select::make('token')
+                                                    ->label('انتخاب متغیر')
+                                                    ->options(function () {
+                                                        $tokens = config('certificate_tokens.tokens', []);
+
+                                                        return collect($tokens)->mapWithKeys(function ($meta, $key) {
+                                                            return [$key => ($meta['label'] ?? $key) . " ({{{$key}}})"];
+                                                        })->toArray();
+                                                    })
+                                                    ->searchable()
+                                                    ->required(),
+                                            ])
+                                            ->action(function (array $data, callable $get, callable $set) {
+                                                $current = (string) $get('payload.html');
+                                                $token   = '{{' . $data['token'] . '}}';
+
+                                                $new = trim($current) === ''
+                                                    ? $token
+                                                    : $current . "\n" . $token;
+
+                                                $set('payload.html', $new);
+                                            }),
+                                    ]),
 
                                 // SIGNATURE GROUP
                                 Forms\Components\TextInput::make('payload.max')
@@ -241,7 +210,8 @@ class EventResource extends Resource
                     ])
                     ->columnSpanFull(),
 
-                Forms\Components\Select::make('template_id')
+
+        Forms\Components\Select::make('template_id')
                     ->label(__('fields.template'))
                     ->relationship('template', 'name')
                     ->searchable()
