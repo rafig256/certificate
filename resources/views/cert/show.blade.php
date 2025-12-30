@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <title>گواهینامه {{ $certificate->serial }}</title>
     <link rel="stylesheet" href="{{ asset('css/certificate.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/them/simple.css') }}">
 </head>
 <body>
 

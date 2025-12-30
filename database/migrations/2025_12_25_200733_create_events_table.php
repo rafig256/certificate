@@ -20,7 +20,6 @@ return new class extends Migration
             $table->foreignId('organizer_id')->constrained('organizations')->cascadeOnDelete();
             $table->timestamp('start_at');
             $table->timestamp('end_at');
-            $table->text('certificate_text');
             $table->foreignId('template_id')->constrained('templates')->cascadeOnDelete();
             $table->string('location');
             $table->string('link')->nullable();

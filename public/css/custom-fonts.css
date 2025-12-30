@@ -6,10 +6,10 @@
     font-style: normal;
 }
 
-:root {
-    --font-family: 'Vazir', sans-serif;
-}
+/*:root {*/
+/*    --font-family: 'Vazir', sans-serif;*/
+/*}*/
 
-.fi-body {
+.fi-body , body, .certificate {
     font-family: 'Vazir', sans-serif !important;
 }

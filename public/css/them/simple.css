@@ -1,0 +1,137 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #f2f2f2;
+}
+
+/* Container */
+.certificate {
+    width: 1123px;          /* A4 landscape @96dpi */
+    height: 794px;
+    background: #fff url('/images/simple.png') no-repeat center center;
+    background-size: cover;  /* تصویر تمام فضای certificate را بپوشاند */
+    margin: 40px auto;
+    padding: 40px 50px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    border: 2px solid #222;
+    box-shadow: 0 10px 40px rgba(0,0,0,.15);
+
+    transform-origin: top center;
+}
+
+/* Header / Body / Footer */
+.cert-header,
+.cert-body,
+.cert-footer {
+    width: 100%;
+}
+
+.cert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px 50px;
+}
+
+.cert-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+}
+
+.cert-footer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+/* Blocks */
+.block {
+    line-height: 1.8;
+}
+
+.block-title {
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.block-body {
+    font-size: 22px;
+}
+
+.block-token {
+    font-size: 14px;
+    color: #444;
+}
+
+/* Alignment helpers */
+.align-right { text-align: right; }
+.align-left  { text-align: left; }
+.align-center { text-align: center; }
+
+/* Signatures */
+.block-signatures {
+    display: flex;
+    gap: 80px;
+}
+
+.signature {
+    min-width: 200px;
+    padding-top: 20px;
+    border-top: 1px solid #000;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* -----------------------------
+   RESPONSIVE (Scale, not reflow)
+--------------------------------*/
+@media (max-width: 1200px) {
+    .certificate {
+        transform: scale(0.9);
+    }
+}
+
+@media (max-width: 992px) {
+    .certificate {
+        transform: scale(0.8);
+    }
+}
+
+@media (max-width: 768px) {
+    .certificate {
+        transform: scale(0.65);
+    }
+}
+
+@media (max-width: 576px) {
+    .certificate {
+        transform: scale(0.5);
+        margin: 20px auto;
+    }
+}
+
+/* Print */
+@media print {
+    body {
+        background: #fff;
+    }
+
+    .certificate {
+        margin: 0;
+        box-shadow: none;
+        border: none;
+        transform: none;
+    }
+}
