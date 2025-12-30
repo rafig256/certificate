@@ -100,7 +100,7 @@ class EventResource extends Resource
                 Forms\Components\DateTimePicker::make('end_at')
                     ->label(__('fields.end_at'))
                     ->required(),
-
+/**
                 Section::make(__('fields.certificate_text'))
                     ->schema([
                         RichEditor::make('certificate_text')
@@ -158,6 +158,86 @@ class EventResource extends Resource
                                         ->send();
                                 }),
                         ])->columnSpanFull(),
+                    ])
+                    ->columnSpanFull(),
+**/
+
+                Section::make('متن گواهینامه')
+                    ->schema([
+                        Forms\Components\Repeater::make('blocks')
+                            ->relationship() // Event -> blocks
+                            ->orderColumn('order')
+                            ->reorderable()
+                            ->collapsible()
+                            ->columns(1)
+                            ->schema([
+
+                                Forms\Components\Select::make('region')
+                                    ->label('ناحیه')
+                                    ->options([
+                                        'header' => 'سربرگ',
+                                        'body'   => 'بدنه',
+                                        'footer' => 'پاورقی',
+                                    ])
+                                    ->required(),
+
+                                Forms\Components\Select::make('type')
+                                    ->label('نوع بلاک')
+                                    ->options([
+                                        'token'           => 'متغیر',
+                                        'title'           => 'عنوان',
+                                        'body_text'       => 'متن',
+                                        'signature_group' => 'امضاها',
+                                    ])
+                                    ->required()
+                                    ->reactive()
+                                    ->disabled(fn ($record) => $record !== null), // بعد از ایجاد قفل شود
+
+                                Forms\Components\Select::make('align')
+                                    ->label('تراز')
+                                    ->options([
+                                        'right'  => 'راست',
+                                        'center' => 'وسط',
+                                        'left'   => 'چپ',
+                                    ])
+                                    ->default('center'),
+
+                                /* ===== payload بر اساس type ===== */
+
+                                // TOKEN
+                                Forms\Components\Select::make('payload.token')
+                                    ->label('توکن')
+                                    ->options(function () {
+                                        $tokens = config('certificate_tokens.tokens', []);
+                                        return collect($tokens)->mapWithKeys(
+                                            fn ($meta, $key) => [$key => $meta['label'] ?? $key]
+                                        )->toArray();
+                                    })
+                                    ->searchable()
+                                    ->visible(fn ($get) => $get('type') === 'token')
+                                    ->required(fn ($get) => $get('type') === 'token'),
+
+                                // TITLE
+                                Forms\Components\TextInput::make('payload.text')
+                                    ->label('متن عنوان')
+                                    ->visible(fn ($get) => $get('type') === 'title')
+                                    ->required(fn ($get) => $get('type') === 'title'),
+
+                                // BODY TEXT
+                                RichEditor::make('payload.html')
+                                    ->label('متن گواهینامه')
+                                    ->columnSpanFull()
+                                    ->visible(fn ($get) => $get('type') === 'body_text')
+                                    ->required(fn ($get) => $get('type') === 'body_text'),
+
+                                // SIGNATURE GROUP
+                                Forms\Components\TextInput::make('payload.max')
+                                    ->label('حداکثر تعداد امضا')
+                                    ->numeric()
+                                    ->default(3)
+                                    ->visible(fn ($get) => $get('type') === 'signature_group'),
+
+                            ]),
                     ])
                     ->columnSpanFull(),
 

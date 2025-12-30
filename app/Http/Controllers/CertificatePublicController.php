@@ -10,64 +10,59 @@ class CertificatePublicController extends Controller
 {
     public function show(Certificate $certificate, CertificateTextRenderer $renderer)
     {
-        // پیشنهاد: روابطی که نیاز داری را لود کن
         $certificate->load([
+            'event.blocks',
             'event.organizer',
-            'certificateHolder',
             'event.signatories',
+            'certificateHolder',
         ]);
 
         $event = $certificate->event;
 
-        // متن خام (HTML) از event
-        $templateHtml = (string) ($event->certificate_text ?? '');
-        // Context: داده‌هایی که توکن‌ها از آن خوانده می‌شوند
+        /* ================= CONTEXT ================= */
+
         $context = [
             'holder' => [
                 'first_name'    => $certificate->certificateHolder?->first_name,
                 'last_name'     => $certificate->certificateHolder?->last_name,
-                'full_name'     => $certificate->certificateHolder?->full_name, // accessor
+                'full_name'     => $certificate->certificateHolder?->full_name,
                 'mobile'        => $certificate->certificateHolder?->mobile,
                 'national_code' => $certificate->certificateHolder?->national_code,
-                'issued_at '    => $certificate->certificateHolder?->issued_at,
+                'issued_at'     => $certificate->issued_at,
             ],
 
             'event' => [
                 'id'        => $event->id,
-                'title'     => $event?->title,
-                'level'     => $event?->level,
-                'location'     => $event?->location,
-                'status'     => $event?->status,
-                'starts_at' => optional($event?->starts_at)->format('Y-m-d'),
+                'title'     => $event->title,
+                'level'     => $event->level,
+                'location'  => $event->location,
+                'status'    => $event->status,
+                'starts_at' => optional($event->starts_at)->format('Y-m-d'),
             ],
 
             'organization' => [
-                'name' => $event?->organizer?->name,
+                'name' => $event->organizer?->name,
             ],
 
             'certificate' => [
                 'serial' => $certificate->serial,
                 'status' => $certificate->status,
             ],
+
+            'signatories' => $event->signatories,
         ];
 
-        $names = $event->signatories->pluck('name')->values();
+        /* ================= BLOCKS ================= */
 
-        $context['signatories'] = [
-            'count' => $names->count(),
-        ];
+        $blocks = $event->blocks
+            ->where('is_active', true)
+            ->sortBy('order')
+            ->groupBy('region');
 
-        foreach (['first', 'second', 'third'] as $i => $key) {
-            $context['signatories']["{$key}_name"] = $names->get($i, '');
-        }
-
-        $renderedHtml = $renderer->render($templateHtml, $context, [
-            'unknown_token_mode' => 'empty', // or 'keep'
-        ]);
-
-        return view('certificates.show', [
-            'certificate'  => $certificate,
-            'renderedHtml' => $renderedHtml,
+        return view('cert.show', [
+            'certificate' => $certificate,
+            'blocks'      => $blocks,
+            'context'     => $context,
         ]);
     }
 }

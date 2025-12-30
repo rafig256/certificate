@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventBlock extends Model
 {
+    protected $guarded = [];
     protected $casts = [
         'payload' => 'array',
         'is_active' => 'boolean',

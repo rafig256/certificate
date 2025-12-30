@@ -1,0 +1,41 @@
+.certificate {
+    width: 1000px;
+    margin: auto;
+    padding: 40px;
+    font-family: Vazirmatn, sans-serif;
+}
+
+.cert-header,
+.cert-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cert-body {
+    margin: 40px 0;
+}
+
+.block {
+    margin: 10px 0;
+}
+
+.align-left { text-align: left; }
+.align-center { text-align: center; }
+.align-right { text-align: right; }
+
+.block-title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.block-signatures {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 40px;
+}
+
+.signature img {
+    max-height: 60px;
+}
