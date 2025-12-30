@@ -36,4 +36,9 @@ class Event extends Model
     public function certificates(){
         return $this->hasMany(Certificate::class);
     }
+
+    public function blocks()
+    {
+        return $this->hasMany(EventBlock::class);
+    }
 }
