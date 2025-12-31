@@ -39,9 +39,17 @@ class TemplateResource extends Resource
                     ->label(__('fields.color'))
                     ->required()
                     ->default('#1E40AF'),
-                Forms\Components\Textarea::make('theme')
-                    ->columnSpanFull()
-                    ->label(__('fields.design_file')),
+                Forms\Components\FileUpload::make('css_file_path')
+                    ->label(__('fields.design_file'))
+                    ->disk('public')
+                    ->directory('certificates/templates')
+                    ->acceptedFileTypes(['text/css'])
+                    ->preserveFilenames()
+                    ->visibility('public')
+                    ->required()
+                    ->required(fn ($context) => $context === 'create')
+                    ->deleteUploadedFileUsing(fn ($file) => true)
+                ,
             ]);
     }
 
