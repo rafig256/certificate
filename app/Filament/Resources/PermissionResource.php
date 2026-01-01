@@ -21,7 +21,7 @@ class PermissionResource extends Resource
     protected static ?string $navigationLabel = 'دسترسی‌ها';
     protected static ?string $pluralModelLabel = 'دسترسی‌ها';
     protected static ?string $modelLabel = 'دسترسی';
-    protected static ?string $navigationGroup = 'مدیریت کاربران';
+    protected static ?string $navigationGroup = 'کاربران';
     protected static ?int $navigationSort = 3;
 
 

@@ -25,8 +25,9 @@ class CertificateResource extends Resource
     protected static ?string $pluralModelLabel = 'گواهینامه‌ها';
 
     protected static ?string $modelLabel = 'گواهینامه';
+    protected static ?int $navigationSort = 1;
 
-    protected static ?string $navigationGroup = 'مدیریت گواهینامه‌ها';
+    protected static ?string $navigationGroup = 'مدیریت گواهینامه';
 
     public static function getEloquentQuery(): Builder
     {

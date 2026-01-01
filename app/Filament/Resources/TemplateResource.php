@@ -21,9 +21,9 @@ class TemplateResource extends Resource
 
     protected static ?string $navigationLabel = 'قالب‌ها';
     protected static ?string $modelLabel = 'قالب';
-    protected static ?string $navigationGroup = 'مدیریت گواهینامه';
+    protected static ?string $navigationGroup = 'مدیریت پنل';
     protected static ?string $pluralModelLabel = 'قالب‌ها';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = -100;
     protected static ?string $navigationIcon = 'heroicon-o-paint-brush';
 
 

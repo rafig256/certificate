@@ -21,7 +21,7 @@ class RoleResource extends Resource
     protected static ?string $navigationLabel = 'نقش‌ها';
     protected static ?string $pluralLabel = 'نقش‌ها';
     protected static ?string $modelLabel = 'نقش';
-    protected static ?string $navigationGroup = 'مدیریت کاربران';
+    protected static ?string $navigationGroup = 'کاربران';
     protected static ?int $navigationSort = 2;
 
 

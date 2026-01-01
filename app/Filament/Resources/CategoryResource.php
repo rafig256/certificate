@@ -18,7 +18,7 @@ class CategoryResource extends Resource
     protected static ?string $model = Category::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'مدیریت گواهینامه';
+    protected static ?string $navigationGroup = 'مدیریت پنل';
     protected static ?string $navigationLabel = 'دسته‌ها';
     protected static ?string $pluralLabel = 'دسته‌ها';
     protected static ?string $modelLabel = 'دسته';

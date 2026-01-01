@@ -30,7 +30,7 @@ class EventResource extends Resource
     protected static ?string $navigationLabel = 'رویدادها';
     protected static ?string $modelLabel = 'رویداد';
     protected static ?string $pluralModelLabel = 'رویدادها';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 2;
     protected static ?string $navigationGroup = 'مدیریت گواهینامه';
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';

@@ -20,7 +20,7 @@ class CertificateHolderResource extends Resource
     protected static ?string $pluralModelLabel = 'دارندگان گواهینامه';
     protected static ?string $modelLabel = 'دارنده گواهینامه';
 
-    protected static ?string $navigationGroup = 'گواهینامه‌ها';
+    protected static ?string $navigationGroup = 'کاربران';
 
     public static function form(Form $form): Form
     {

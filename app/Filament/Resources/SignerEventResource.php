@@ -19,9 +19,12 @@ use Illuminate\Support\Facades\Auth;
 class SignerEventResource extends Resource
 {
     protected static ?string $model = Event::class;
+    protected static ?string $navigationGroup = 'مدیریت گواهینامه';
+
     protected static ?string $navigationLabel = "امضای رویداد";
     protected static ?string $modelLabel = "امضای رویداد";
     protected static ?string $pluralLabel = "امضای رویدادها";
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
