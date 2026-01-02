@@ -25,6 +25,7 @@
                     <li class="nav-item"><a class="nav-link" href="#categories">دسته‌بندی</a></li>
                     <li class="nav-item"><a class="nav-link" href="#services">خدمات</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">تماس با ما</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin">ورود</a></li>
                 </ul>
             </div>
         </div>
@@ -39,7 +40,7 @@
                     <p>مهارت‌های خود را با گواهینامه‌های دیجیتال و قابل استعلام به اثبات برسانید</p>
                 </div>
                 <div class="hero-image">
-                    <img src="https://via.placeholder.com/400x400/667eea/ffffff?text=گواهینامه+دیجیتال" alt="گواهینامه">
+                    <img src="{{ asset('storage/home/valid-certificate.jpg') }}" alt="گواهینامه معتبر">
                 </div>
             </div>
         </div>
@@ -50,7 +51,7 @@
                     <p>در کمتر از ۲۴ ساعت گواهینامه آنلاین خود را دریافت کنید</p>
                 </div>
                 <div class="hero-image">
-                    <img src="https://via.placeholder.com/400x400/764ba2/ffffff?text=صدور+سریع" alt="صدور سریع">
+                    <img src="{{asset('storage/home/speed.png')}}" alt="صدور سریع">
                 </div>
             </div>
         </div>
@@ -61,7 +62,7 @@
                     <p>تمامی گواهینامه‌ها دارای کد استعلام یکتا و امضای دیجیتال هستند</p>
                 </div>
                 <div class="hero-image">
-                    <img src="https://via.placeholder.com/400x400/f093fb/ffffff?text=امنیت+بالا" alt="امنیت">
+                    <img src="{{asset('storage/home/secure.jpg')}}" alt="امنیت">
                 </div>
             </div>
         </div>
@@ -84,13 +85,10 @@
                 </button>
                 <div class="cert-slides">
                     <div class="cert-slide">
-                        <img src="https://via.placeholder.com/800x566/667eea/ffffff?text=گواهینامه+نمونه+1" alt="گواهینامه 1">
+                        <img src="{{asset('storage/home/cert-sample1.jpg')}}" alt="گواهینامه 1">
                     </div>
                     <div class="cert-slide">
-                        <img src="https://via.placeholder.com/800x566/764ba2/ffffff?text=گواهینامه+نمونه+2" alt="گواهینامه 2">
-                    </div>
-                    <div class="cert-slide">
-                        <img src="https://via.placeholder.com/800x566/f093fb/ffffff?text=گواهینامه+نمونه+3" alt="گواهینامه 3">
+                        <img src="{{asset('storage/home/cert-sample2.jpg')}}" alt="گواهینامه 2">
                     </div>
                 </div>
                 <button class="slider-btn" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); z-index: 10;" onclick="nextCert()">
@@ -106,25 +104,25 @@
             <div class="row">
                 <div class="col-md-3 col-6">
                     <div class="stat-item">
-                        <div class="stat-number" data-target="15847">0</div>
+                        <div class="stat-number" data-target="22">0</div>
                         <div class="stat-label">کاربران</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="stat-item">
-                        <div class="stat-number" data-target="342">0</div>
+                        <div class="stat-number" data-target="3">0</div>
                         <div class="stat-label">سازمان‌ها</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="stat-item">
-                        <div class="stat-number" data-target="128">0</div>
+                        <div class="stat-number" data-target="8">0</div>
                         <div class="stat-label">امضا کنندگان</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="stat-item">
-                        <div class="stat-number" data-target="28459">0</div>
+                        <div class="stat-number" data-target="20">0</div>
                         <div class="stat-label">گواهینامه‌های صادر شده</div>
                     </div>
                 </div>
@@ -406,21 +404,21 @@
                             <i class="bi bi-telephone"></i>
                             <div>
                                 <h5>تلفن تماس</h5>
-                                <p>021-12345678</p>
+                                <p>09914190488</p>
                             </div>
                         </div>
                         <div class="contact-item">
                             <i class="bi bi-envelope"></i>
                             <div>
                                 <h5>ایمیل</h5>
-                                <p>info@certificate.com</p>
+                                <p>rafig_256@yahoo.com</p>
                             </div>
                         </div>
                         <div class="contact-item">
                             <i class="bi bi-geo-alt"></i>
                             <div>
                                 <h5>آدرس</h5>
-                                <p>تهران، خیابان ولیعصر</p>
+                                <p>مشگین شهر، میدان آزادی</p>
                             </div>
                         </div>
                     </div>
@@ -462,16 +460,11 @@
                         <li><a href="#certificates">نمونه گواهینامه‌ها</a></li>
                         <li><a href="#categories">دسته‌بندی</a></li>
                         <li><a href="#services">خدمات ما</a></li>
-                        <li><a href="#contact">تماس با ما</a></li>
-                        <li><a href="#">راهنمای استعلام</a></li>
-                        <li><a href="#">قوانین و مقررات</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 footer-column">
-                    <h5>نمادهای اعتماد</h5>
+                    <h5>نمادها</h5>
                     <div class="d-flex gap-3 mt-3">
-                        <img src="https://via.placeholder.com/100x100/667eea/ffffff?text=نماد+1" alt="نماد اعتماد" style="width: 80px; border-radius: 10px;">
-                        <img src="https://via.placeholder.com/100x100/764ba2/ffffff?text=نماد+2" alt="نماد اعتماد" style="width: 80px; border-radius: 10px;">
                     </div>
                 </div>
             </div>
