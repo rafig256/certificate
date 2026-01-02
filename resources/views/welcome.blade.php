@@ -184,10 +184,13 @@
             <h3 class="text-center mb-4">سازمان‌های همکار</h3>
         </div>
         <div class="marquee">
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/667eea/ffffff?text=س1" alt="سازمان 1">
-                <h6>سازمان یک</h6>
-            </div>
+            @foreach($organizes as $organ)
+                <div class="marquee-item">
+                    <img src="https://via.placeholder.com/80/667eea/ffffff?text=س1" alt="سازمان 1">
+                    <h6>{{$organ->name}}</h6>
+                </div>
+            @endforeach
+
             <div class="marquee-item">
                 <img src="https://via.placeholder.com/80/764ba2/ffffff?text=س2" alt="سازمان 2">
                 <h6>سازمان دو</h6>

@@ -14,6 +14,7 @@ class HomeController extends Controller
     public function home()
     {
         $stat = new HomeViewModel();
-        return view('welcome' , compact('stat'));
+        $organizes = Organization::query()->get();
+        return view('welcome' , compact('stat','organizes'));
     }
 }
