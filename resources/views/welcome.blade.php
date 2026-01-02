@@ -186,56 +186,10 @@
         <div class="marquee">
             @foreach($organizes as $organ)
                 <div class="marquee-item">
-                    <img src="https://via.placeholder.com/80/667eea/ffffff?text=س1" alt="سازمان 1">
+                    <img src="{{asset('storage/'.($organ->logo_path ?? "temp/unknow.jpg"))}}" alt="{{$organ->slug}}">
                     <h6>{{$organ->name}}</h6>
                 </div>
             @endforeach
-
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/764ba2/ffffff?text=س2" alt="سازمان 2">
-                <h6>سازمان دو</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/f093fb/ffffff?text=س3" alt="سازمان 3">
-                <h6>سازمان سه</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/667eea/ffffff?text=س4" alt="سازمان 4">
-                <h6>سازمان چهار</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/764ba2/ffffff?text=س5" alt="سازمان 5">
-                <h6>سازمان پنج</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/f093fb/ffffff?text=س6" alt="سازمان 6">
-                <h6>سازمان شش</h6>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/667eea/ffffff?text=س1" alt="سازمان 1">
-                <h6>سازمان یک</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/764ba2/ffffff?text=س2" alt="سازمان 2">
-                <h6>سازمان دو</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/f093fb/ffffff?text=س3" alt="سازمان 3">
-                <h6>سازمان سه</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/667eea/ffffff?text=س4" alt="سازمان 4">
-                <h6>سازمان چهار</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/764ba2/ffffff?text=س5" alt="سازمان 5">
-                <h6>سازمان پنج</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/f093fb/ffffff?text=س6" alt="سازمان 6">
-                <h6>سازمان شش</h6>
-            </div>
         </div>
     </section>
 

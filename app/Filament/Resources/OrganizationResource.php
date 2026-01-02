@@ -7,6 +7,7 @@ use App\Filament\Resources\OrganizationResource\RelationManagers;
 use App\Models\Organization;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -48,9 +49,17 @@ class OrganizationResource extends Resource
                     )
                     ->label(__('fields.organize_slug'))
                     ->maxLength(255),
-                Forms\Components\TextInput::make('logo_path')
+
+                FileUpload::make('logo_path')
                     ->label(__('fields.logo'))
-                    ->maxLength(255),
+                    ->directory('organ')
+                    ->visibility('public')
+                    ->image()
+                    ->imageResizeMode('cover')
+                    ->imagePreviewHeight(150)
+                    ->preserveFilenames()
+                    ->maxSize(1024),
+
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->unique(
