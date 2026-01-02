@@ -104,25 +104,25 @@
             <div class="row">
                 <div class="col-md-3 col-6">
                     <div class="stat-item">
-                        <div class="stat-number" data-target="22">0</div>
+                        <div class="stat-number" data-target="{{$stat->userCount}}">0</div>
                         <div class="stat-label">کاربران</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="stat-item">
-                        <div class="stat-number" data-target="3">0</div>
+                        <div class="stat-number" data-target="{{$stat->organizationCount}}">0</div>
                         <div class="stat-label">سازمان‌ها</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="stat-item">
-                        <div class="stat-number" data-target="8">0</div>
+                        <div class="stat-number" data-target="{{$stat->signerCount}}">0</div>
                         <div class="stat-label">امضا کنندگان</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="stat-item">
-                        <div class="stat-number" data-target="20">0</div>
+                        <div class="stat-number" data-target="{{$stat->certificateCount}}">0</div>
                         <div class="stat-label">گواهینامه‌های صادر شده</div>
                     </div>
                 </div>
