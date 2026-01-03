@@ -7,6 +7,10 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
         <link rel="stylesheet" href="{{asset('css/welcome.css')}}">
+        {{--slider--}}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     </head>
     <body>
     <!-- Navbar -->
@@ -178,35 +182,48 @@
         </div>
     </section>
 
-    <!-- Organizations Marquee -->
+    <!-- Organizations slider -->
     <section class="marquee-section">
         <div class="container">
             <h3 class="text-center mb-4">@lang('fields.organizers_title')</h3>
         </div>
-        <div class="marquee">
-            @foreach($organizes as $organ)
-                <div class="marquee-item">
-                    <img src="{{asset('storage/'.($organ->logo_path ?? "temp/unknow.jpg"))}}" alt="{{$organ->slug}}">
-                    <h6>{{$organ->name}}</h6>
-                </div>
-            @endforeach
+
+        <div class="swiper org-swiper">
+            <div class="swiper-wrapper">
+                @foreach($organizes as $organ)
+                    <div class="swiper-slide marquee-item">
+                        <img src="{{ asset('storage/'.($organ->logo_path ?? 'temp/unknow.jpg')) }}">
+                        <h6>{{ $organ->slug }}</h6>
+                    </div>
+                @endforeach
+                @foreach($organizes as $organ)
+                    <div class="swiper-slide marquee-item">
+                        <img src="{{ asset('storage/'.($organ->logo_path ?? 'temp/unknow.jpg')) }}">
+                        <h6>{{ $organ->slug }}</h6>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </section>
 
-    <!-- Signers Marquee -->
-    <section class="marquee-section alt">
+
+    <!-- Signers slider -->
+    <section class="marquee-section">
         <div class="container">
-            <h3 class="text-center mb-4">امضا کنندگان</h3>
+            <h3 class="text-center mb-4">@lang('fields.signatories_title')</h3>
         </div>
-        <div class="marquee marquee-reverse">
-            @foreach($signatories as $signer)
-                <div class="marquee-item">
-                    <img src="{{asset('storage/'.($signer->logo_path ?? "temp/unknow.jpg"))}}" alt="{{$signer->name}}">
-                    <h6>{{$signer->name}}</h6>
-                </div>
-            @endforeach
+        <div class="swiper signer-swiper">
+            <div class="swiper-wrapper">
+                @foreach($signatories as $signer)
+                    <div class="swiper-slide marquee-item">
+                        <img src="{{ asset('storage/'.($signer->logo_path ?? 'temp/unknow.jpg')) }}">
+                        <h6>{{ $signer->name }}</h6>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </section>
+
 
     <!-- Services Section -->
     <section id="services" class="services-section">
@@ -477,6 +494,34 @@
                     }
                 }
             });
+        });
+    </script>
+    <script>
+        new Swiper('.org-swiper', {
+            loop: true,
+            slidesPerView: 'auto',
+            spaceBetween: 30,
+            speed: 6000,
+            freeMode: true,
+            freeModeMomentum: false,
+            autoplay: {
+                delay: 0,
+                disableOnInteraction: false,
+            },
+        });
+
+        new Swiper('.signer-swiper', {
+            loop: true,
+            slidesPerView: 'auto',
+            spaceBetween: 30,
+            speed: 6000,
+            freeMode: true,
+            freeModeMomentum: false,
+            autoplay: {
+                delay: 0,
+                reverseDirection: true,
+                disableOnInteraction: false,
+            },
         });
     </script>
     </body>

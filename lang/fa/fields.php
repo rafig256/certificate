@@ -64,5 +64,6 @@ return [
     'signature_admin_user' => 'مدیر واحد امضا کننده',
     'sing_path_upload' => 'آپلود امضا',
     'responsible_person_name' => 'نام نمایشی مدیر موسسه ی امضا کننده',
-    'organizers_title' => 'نهادهای مجری'
+    'organizers_title' => 'نهادهای مجری',
+    'signatories_title' => 'نهاد های امضا کننده',
     ];
