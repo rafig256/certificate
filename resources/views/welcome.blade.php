@@ -181,7 +181,7 @@
     <!-- Organizations Marquee -->
     <section class="marquee-section">
         <div class="container">
-            <h3 class="text-center mb-4">سازمان‌های همکار</h3>
+            <h3 class="text-center mb-4">@lang('fields.organizers_title')</h3>
         </div>
         <div class="marquee">
             @foreach($organizes as $organ)
@@ -393,6 +393,7 @@
         // Hero Slider
         let currentSlide = 0;
         const slides = document.querySelectorAll('.hero-slide');
+        slides[0].classList.add('active');
 
         function showSlide(n) {
             slides[currentSlide].classList.remove('active');
