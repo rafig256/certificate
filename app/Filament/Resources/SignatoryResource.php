@@ -94,18 +94,25 @@ class SignatoryResource extends Resource
                             ->helperText('فقط فرمت png مجاز است')
                         ,
 
-                        TextInput::make('level')
-                            ->label('سطح')
-                            ->numeric()
-                            ->default(1),
-
                         Select::make('user_id')
                             ->label('کاربر مرتبط')
                             ->relationship('user', 'name')
                             ->searchable()
                             ->preload()
                             ->required(),
-                    ])->columns(2),
+
+                        TextInput::make('level')
+                            ->label('سطح')
+                            ->numeric()
+                            ->default(1),
+
+                        TextInput::make('responsible')
+                            ->label(__('fields.responsible_person_name'))
+                            ->maxLength(100),
+
+                     ])->columns(2),
+
+
             ]);
     }
 
