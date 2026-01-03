@@ -6,6 +6,7 @@ use App\Filament\Resources\SignatoryResource\Pages;
 use App\Filament\Resources\SignatoryResource\RelationManagers;
 use App\Models\Signatory;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -67,6 +68,31 @@ class SignatoryResource extends Resource
                                 'سایر' => 'سایر',
                             ])
                             ->required(),
+
+
+                        FileUpload::make('logo_path')
+                            ->label(__('fields.logo'))
+                            ->directory('signer')
+                            ->visibility('public')
+                            ->image()
+                            ->imageResizeMode('cover')
+                            ->imagePreviewHeight(150)
+                            ->preserveFilenames()
+                            ->maxSize(1024)
+                        ,
+
+                        FileUpload::make('sign_path')
+                            ->label(__('fields.sing_path_upload'))
+                            ->directory('signer')
+                            ->visibility('public')
+                            ->image()
+                            ->acceptedFileTypes(['image/png'])
+                            ->imageResizeMode('cover')
+                            ->imagePreviewHeight(150)
+                            ->preserveFilenames()
+                            ->maxSize(1024)
+                            ->helperText('فقط فرمت png مجاز است')
+                        ,
 
                         TextInput::make('level')
                             ->label('سطح')

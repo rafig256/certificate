@@ -61,5 +61,6 @@ return [
         'active'  => 'فعال',
         'revoked' => 'لغو شده',
     ],
-    'signature_admin_user' => 'مدیر واحد امضا کننده'
+    'signature_admin_user' => 'مدیر واحد امضا کننده',
+    'sing_path_upload' => 'آپلود امضا',
 ];

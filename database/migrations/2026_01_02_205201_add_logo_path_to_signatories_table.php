@@ -17,6 +17,10 @@ return new class extends Migration
                 ->nullable()
                 ->unique()
                 ->after('phone');
+            $table
+                ->string('sign_path')
+                ->nullable()
+                ->after('logo_path');
         });
     }
 
@@ -26,7 +30,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('signatories', function (Blueprint $table) {
-            //
+            $table->dropUnique(['logo_path']);
+            $table->dropColumn(['logo_path', 'sign_path']);
         });
     }
 };

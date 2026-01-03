@@ -15,6 +15,7 @@ class HomeController extends Controller
     {
         $stat = new HomeViewModel();
         $organizes = Organization::query()->get();
-        return view('welcome' , compact('stat','organizes'));
+        $signatories = Signatory::all();
+        return view('welcome' , compact('stat','organizes' , 'signatories'));
     }
 }

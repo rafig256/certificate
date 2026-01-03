@@ -199,55 +199,12 @@
             <h3 class="text-center mb-4">امضا کنندگان</h3>
         </div>
         <div class="marquee marquee-reverse">
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/667eea/ffffff?text=ا1" alt="امضا کننده 1">
-                <h6>دکتر احمدی</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/764ba2/ffffff?text=ا2" alt="امضا کننده 2">
-                <h6>مهندس محمدی</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/f093fb/ffffff?text=ا3" alt="امضا کننده 3">
-                <h6>دکتر رضایی</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/667eea/ffffff?text=ا4" alt="امضا کننده 4">
-                <h6>استاد حسینی</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/764ba2/ffffff?text=ا5" alt="امضا کننده 5">
-                <h6>دکتر کریمی</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/f093fb/ffffff?text=ا6" alt="امضا کننده 6">
-                <h6>مهندس علوی</h6>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/667eea/ffffff?text=ا1" alt="امضا کننده 1">
-                <h6>دکتر احمدی</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/764ba2/ffffff?text=ا2" alt="امضا کننده 2">
-                <h6>مهندس محمدی</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/f093fb/ffffff?text=ا3" alt="امضا کننده 3">
-                <h6>دکتر رضایی</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/667eea/ffffff?text=ا4" alt="امضا کننده 4">
-                <h6>استاد حسینی</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/764ba2/ffffff?text=ا5" alt="امضا کننده 5">
-                <h6>دکتر کریمی</h6>
-            </div>
-            <div class="marquee-item">
-                <img src="https://via.placeholder.com/80/f093fb/ffffff?text=ا6" alt="امضا کننده 6">
-                <h6>مهندس علوی</h6>
-            </div>
+            @foreach($signatories as $signer)
+                <div class="marquee-item">
+                    <img src="{{asset('storage/'.($signer->logo_path ?? "temp/unknow.jpg"))}}" alt="{{$signer->name}}">
+                    <h6>{{$signer->name}}</h6>
+                </div>
+            @endforeach
         </div>
     </section>
 
