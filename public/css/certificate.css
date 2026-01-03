@@ -38,3 +38,30 @@
 .signature img {
     max-height: 60px;
 }
+
+.signature {
+    position: relative;
+    overflow: hidden; /* اگر امضا از باکس بیرون زد */
+}
+
+/* تصویر امضا */
+.signature-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    max-width: 80%;
+    max-height: 80%;
+
+    opacity: 0.50;
+    pointer-events: none; 
+    z-index: 2;
+}
+
+/* متن و لوگو زیر امضا */
+.signature .name,
+.signature .logo {
+    position: relative;
+    z-index: 1;
+}
