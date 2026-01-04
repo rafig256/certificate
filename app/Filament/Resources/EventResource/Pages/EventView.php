@@ -96,12 +96,15 @@ class EventView extends ViewRecord
                 Section::make('پرداخت')
                     ->schema([
                         TextEntry::make('payment_mode')
-                            ->label('روش پرداخت'),
+                            ->label('روش پرداخت')
+                            ->formatStateUsing(fn ($state) => $state?->label()),
 
                         TextEntry::make('price_per_person')
                             ->label('هزینه هر نفر')
                             ->formatStateUsing(fn ($state) =>
-                            $state == 0 ? 'رایگان' : number_format($state) . ' تومان'
+                            $state == 0
+                                ? 'رایگان'
+                                : number_format($state) . ' تومان'
                             ),
                     ])
                     ->columns(2),
