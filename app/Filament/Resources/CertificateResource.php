@@ -25,7 +25,7 @@ class CertificateResource extends Resource
     protected static ?string $pluralModelLabel = 'گواهینامه‌ها';
 
     protected static ?string $modelLabel = 'گواهینامه';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationGroup = 'مدیریت گواهینامه';
 
