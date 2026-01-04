@@ -84,7 +84,8 @@ class EventView extends ViewRecord
                             }),
 
                         TextEntry::make('level')
-                            ->label('سطح'),
+                            ->label(__('fields.level'))
+                            ->formatStateUsing(fn ($state) => $state?->label()),
                     ])
                     ->columns(2),
 

@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Enums\Level;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
     protected $guarded = [];
+
+    protected $casts = [
+        'level' => Level::class,
+    ];
 
     public function category()
     {
