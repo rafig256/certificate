@@ -69,4 +69,5 @@ return [
     'user_avatar' => 'تصویر کاربر',
     'current_avatar' => 'آواتار کاربر',
     'no_avatar' => 'تصویر کاربر درج نشده است',
+    'connect_to_user' => 'اتصال کاربر',
     ];

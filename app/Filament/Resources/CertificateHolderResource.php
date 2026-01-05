@@ -4,9 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CertificateHolderResource\Pages;
 use App\Models\CertificateHolder;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -52,6 +54,65 @@ class CertificateHolderResource extends Resource
                             ->maxSize(512) // 0.5MB
                             ->nullable()
                             ,
+
+                        Select::make('user_id')
+                            ->label(__('fields.connect_to_user'))
+                            ->placeholder('انتخاب کاربر')
+                            ->searchable()
+                            ->options(function (callable $get, $record) {
+
+                                if ($record?->user_id) {
+                                    return [];
+                                }
+
+                                if (! auth()->user()?->can('certificate_holder.link_user')) {
+                                    return [];
+                                }
+
+                                if (! $record) {
+                                    return [];
+                                }
+
+                                if (! $record->mobile && ! $record->national_code) {
+                                    return [];
+                                }
+
+                                return User::query()
+                                    ->whereNotIn('id', function ($q) {
+                                        $q->select('user_id')
+                                            ->from('certificate_holders')
+                                            ->whereNotNull('user_id');
+                                    })
+                                    ->where(function ($query) use ($record) {
+                                        if ($record->mobile) {
+                                            $query->orWhere('mobile', $record->mobile);
+                                        }
+
+                                        if ($record->national_code) {
+                                            $query->orWhere('national_code', $record->national_code);
+                                        }
+                                    })
+                                    ->pluck('name', 'id');
+
+                            })
+                            ->visible(fn ($record) =>
+                                is_null($record?->user_id)
+                                && auth()->user()?->can('certificate_holder.link_user')
+                            )
+                            ->disabled(fn ($record) => filled($record?->user_id))
+                            ->helperText('پس از اتصال، امکان تغییر وجود ندارد')
+                        ,
+
+                        Placeholder::make('connected_user')
+                            ->label('کاربر سامانه')
+                            ->content(fn ($record) =>
+                            $record?->user
+                                ? $record->user->name
+                                : '—'
+                            )
+                            ->visible(fn ($record) => filled($record?->user_id))
+                        ,
+
                     ])
                     ->columns(2),
 
