@@ -66,4 +66,7 @@ return [
     'responsible_person_name' => 'نام نمایشی مدیر موسسه ی امضا کننده',
     'organizers_title' => 'نهادهای مجری',
     'signatories_title' => 'نهاد های امضا کننده',
+    'user_avatar' => 'تصویر کاربر',
+    'current_avatar' => 'آواتار کاربر',
+    'no_avatar' => 'تصویر کاربر درج نشده است',
     ];

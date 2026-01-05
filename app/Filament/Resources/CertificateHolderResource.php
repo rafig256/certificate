@@ -5,10 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CertificateHolderResource\Pages;
 use App\Models\CertificateHolder;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\HtmlString;
 
 class CertificateHolderResource extends Resource
 {
@@ -37,6 +41,30 @@ class CertificateHolderResource extends Resource
                             ->label(__('fields.last_name'))
                             ->required()
                             ->maxLength(255),
+                        FileUpload::make('avatar_path')
+                            ->label(__('fields.user_avatar'))
+                            ->image()
+                            ->disk('public')
+                            ->directory('user/avatars')
+                            ->imageEditor()
+                            ->imageCropAspectRatio('3:4')
+                            ->maxSize(512) // 0.5MB
+                            ->nullable()
+                            ->previewable(false)
+                            ,
+                        Placeholder::make('current_avatar_preview')
+                            ->label(__('fields.current_avatar'))
+                            ->content(function ($record) {
+                                if (! $record?->avatar_path) {
+                                    return '<em>' . __('No avatar uploaded.') . '</em>';
+                                }
+                                $url = asset('storage/'.$record->avatar_path);
+                                return new HtmlString(
+                                    "<img src=\"{$url}\" style=\"max-width:150px; height:auto; border-radius:6px;\" />"
+                                );
+                            })
+                            ->hiddenOn(['create']),
+
                     ])
                     ->columns(2),
 
