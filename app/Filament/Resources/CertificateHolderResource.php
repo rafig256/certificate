@@ -166,9 +166,9 @@ class CertificateHolderResource extends Resource
                     ->label(__('fields.mobile'))
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->label('کاربر سامانه')
-                    ->formatStateUsing(fn ($state) => $state ? 'متصل شده' : '—')
+                    ->placeholder('—')
                     ->badge()
                     ->color(fn ($state) => $state ? 'success' : 'gray'),
             ])
