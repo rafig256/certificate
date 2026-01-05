@@ -35,20 +35,27 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->label('نام')
                     ->required(),
-                Forms\Components\TextInput::make('email')
-                    ->label('ایمیل')
-                    ->email()
-                    ->required(),
-                Forms\Components\TextInput::make('password')
-                    ->label('رمز عبور')
-                    ->password()
-                    ->dehydrated(fn ($state) => filled($state)) // فقط اگر پر شده باشد ذخیره شود
-                    ->required(fn (string $context): bool => $context === 'create'),
+
                 Forms\Components\TextInput::make('national_code')
                     ->label('کد ملی')
                     ->length(10)
                     ->unique(ignoreRecord: true) // جلوگیری از خطای تکراری هنگام ویرایش همان کاربر
                     ->nullable(),
+
+                Forms\Components\TextInput::make('email')
+                    ->label('ایمیل')
+                    ->email()
+                    ->required(),
+
+                Forms\Components\TextInput::make('password')
+                    ->label('رمز عبور')
+                    ->password()
+                    ->dehydrated(fn ($state) => filled($state)) // فقط اگر پر شده باشد ذخیره شود
+                    ->required(fn (string $context): bool => $context === 'create'),
+
+                Forms\Components\TextInput::make('mobile')
+                    ->label(__('fields.mobile')),
+
                 Select::make('roles')
                     ->label('نقش‌ها')
                     ->multiple()

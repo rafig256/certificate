@@ -10,6 +10,7 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
@@ -50,21 +51,7 @@ class CertificateHolderResource extends Resource
                             ->imageCropAspectRatio('3:4')
                             ->maxSize(512) // 0.5MB
                             ->nullable()
-                            ->previewable(false)
                             ,
-                        Placeholder::make('current_avatar_preview')
-                            ->label(__('fields.current_avatar'))
-                            ->content(function ($record) {
-                                if (! $record?->avatar_path) {
-                                    return '<em>' . __('No avatar uploaded.') . '</em>';
-                                }
-                                $url = asset('storage/'.$record->avatar_path);
-                                return new HtmlString(
-                                    "<img src=\"{$url}\" style=\"max-width:150px; height:auto; border-radius:6px;\" />"
-                                );
-                            })
-                            ->hiddenOn(['create']),
-
                     ])
                     ->columns(2),
 
@@ -104,6 +91,11 @@ class CertificateHolderResource extends Resource
                 Tables\Columns\TextColumn::make('last_name')
                     ->label(__('fields.last_name'))
                     ->searchable(),
+
+                ImageColumn::make('avatar_path')
+                    ->label('عکس')
+                    ->disk('public')
+                    ->circular(),
 
                 Tables\Columns\TextColumn::make('national_code')
                     ->label(__('fields.national_code'))
