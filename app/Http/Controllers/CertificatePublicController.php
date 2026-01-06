@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Certificate;
 use App\Services\CertificateTextRenderer;
+use App\Services\CertificateViewService;
 use Illuminate\Http\Request;
 
 class CertificatePublicController extends Controller
@@ -58,6 +59,8 @@ class CertificatePublicController extends Controller
             ->where('is_active', true)
             ->sortBy('order')
             ->groupBy('region');
+
+        CertificateViewService::handle($certificate);
 
         return view('cert.show', [
             'certificate' => $certificate,
