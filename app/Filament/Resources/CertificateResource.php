@@ -136,6 +136,17 @@ class CertificateResource extends Resource
                     ->copyMessage('شماره سریال کپی شد')
                     ->copyMessageDuration(1500),
 
+                TextColumn::make('certificate_link')
+                    ->label(__('fields.link'))
+                    ->state(fn ($record) => 'مشاهده')
+                    ->url(fn ($record) =>
+                    route('certificates.show', $record->serial)
+                    )
+                    ->openUrlInNewTab()
+                    ->color('primary')
+                    ->sortable(false)
+                    ->searchable(false),
+
                 Tables\Columns\TextColumn::make('issued_at')
                     ->label(__('fields.issued_at'))
                     ->date('Y-m-d')
