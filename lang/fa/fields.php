@@ -70,4 +70,6 @@ return [
     'current_avatar' => 'آواتار کاربر',
     'no_avatar' => 'تصویر کاربر درج نشده است',
     'connect_to_user' => 'اتصال کاربر',
+    'views' => 'بازدید',
+    'certificate_show_link' => 'لینک مشاهده آنلاین',
     ];

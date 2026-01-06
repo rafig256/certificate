@@ -6,6 +6,8 @@ use App\Filament\Resources\CertificateResource\Pages;
 use App\Filament\Resources\CertificateResource\RelationManagers;
 use App\Models\Certificate;
 use Filament\Forms;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\HtmlString;
 
 class CertificateResource extends Resource
 {
@@ -76,7 +79,39 @@ class CertificateResource extends Resource
                     ->required()
                     ->default('active'),
 
-            ]);
+                Section::make('اطلاعات سیستمی')
+                    ->columns(2)
+                    ->visible(fn ($record) => $record !== null)
+                    ->schema([
+
+                        Placeholder::make('views')
+                            ->label(__('fields.views'))
+                            ->content(fn ($record) =>
+                            number_format($record->views)
+                            ),
+
+                        Placeholder::make('serial')
+                            ->label(__('fields.serial'))
+                            ->content(fn ($record) =>
+                            $record->serial
+                            ),
+
+                        Placeholder::make('public_link')
+                            ->label(__('fields.certificate_show_link'))
+                            ->content(fn ($record) =>
+                            new HtmlString(
+                                '<a href="' .
+                                route('certificates.show', $record->serial) .
+                                '" target="_blank" class="text-primary-600 underline">
+                        مشاهده گواهینامه
+                    </a>'
+                            )
+                            ),
+
+                    ])
+                ,
+
+        ]);
     }
 
 
