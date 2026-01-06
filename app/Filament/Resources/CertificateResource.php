@@ -12,6 +12,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -136,16 +137,18 @@ class CertificateResource extends Resource
                     ->copyMessage('شماره سریال کپی شد')
                     ->copyMessageDuration(1500),
 
-                TextColumn::make('certificate_link')
+                IconColumn::make('public_link')
                     ->label(__('fields.link'))
-                    ->state(fn ($record) => 'مشاهده')
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->state(fn () => true)
+                    ->tooltip('مشاهده گواهینامه')
+                    ->alignCenter()
                     ->url(fn ($record) =>
                     route('certificates.show', $record->serial)
                     )
                     ->openUrlInNewTab()
                     ->color('primary')
-                    ->sortable(false)
-                    ->searchable(false),
+                ,
 
                 Tables\Columns\TextColumn::make('issued_at')
                     ->label(__('fields.issued_at'))
@@ -178,7 +181,9 @@ class CertificateResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->label('ویرایش'),
+                    ->label('')
+                    ->tooltip('ویرایش')
+                    ->icon('heroicon-o-pencil-square')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
