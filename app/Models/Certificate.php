@@ -28,4 +28,30 @@ class Certificate extends Model
     public function certificateHolder(){
         return $this->belongsTo(CertificateHolder::class,'certificate_holder_id');
     }
+
+    public function scopeVisibleTo($query, User $user)
+    {
+        // Administrator → همه
+        if ($user->hasRole('administrator')) {
+            return $query;
+        }
+
+        // Organizer → رویدادهای خودش
+        if ($user->hasRole('organizer')) {
+            return $query->whereHas('event', fn ($q) =>
+            $q->where('organizer_id', $user->id)
+            );
+        }
+
+        // Signer → رویدادهایی که امضا کرده
+        if ($user->hasRole('signer')) {
+            return $query->whereHas('event.signatories', fn ($q) =>
+            $q->where('users.id', $user->id)
+            );
+        }
+
+        // سایرین → هیچ
+        return $query->whereRaw('1 = 0');
+    }
+
 }

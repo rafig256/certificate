@@ -33,15 +33,15 @@ class CertificateResource extends Resource
 
     protected static ?string $navigationGroup = 'مدیریت گواهینامه';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->can('viewAny', \App\Models\Certificate::class) ?? false;
+    }
+
+
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
-            ->whereHas('event.organizer', function (Builder $query) {
-                $query->whereIn(
-                    'organizations.id',
-                    auth()->user()->organizations()->pluck('id')
-                );
-            });
+        return parent::getEloquentQuery()->visibleTo(auth()->user());
     }
     public static function form(Form $form): Form
     {
