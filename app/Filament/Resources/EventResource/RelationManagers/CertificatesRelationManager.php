@@ -37,10 +37,6 @@ class CertificatesRelationManager extends RelationManager
                         ->toArray();
                 })
 
-//                ->getOptionLabelUsing(function ($value) {
-//                    $holder = \App\Models\CertificateHolder::find($value);
-//                    return $holder ? "{$holder->first_name} {$holder->last_name}" : null;
-//                })
                 ->getOptionLabelUsing(fn ($value) =>
                 CertificateHolder::whereKey($value)
                     ->selectRaw("CONCAT(first_name,' ',last_name) as full_name")
