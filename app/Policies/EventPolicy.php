@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Certificate;
+use App\Models\Event;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class CertificatePolicy
+class EventPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -15,7 +15,6 @@ class CertificatePolicy
     {
         return $user->hasAnyRole([
             'administrator',
-            'admin',
             'organizer',
             'signer',
         ]);
@@ -24,39 +23,50 @@ class CertificatePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Certificate $certificate): bool
+    public function view(User $user, Event $event): bool
     {
+        // administrator → همه
         if ($user->hasRole('administrator')) {
             return true;
         }
+
+        // organizer → رویدادهای خودش
         if ($user->hasRole('organizer')) {
-            return $certificate->event->organizer_id === $user->id;
+            return $event->organizer_id === $user->id;
         }
 
-        // Signer → اگر امضاکننده این رویداد است
+        // signer → اجازه دیدن (بدون مالکیت)
         if ($user->hasRole('signer')) {
-            return $certificate->event
-                ->signatories()
-                ->where('users.id', $user->id)
-                ->exists();
+            return true;
         }
+
         return false;
     }
 
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
+    {
+        return $user->hasAnyRole([
+            'administrator',
+            'organizer',
+        ]);
+    }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Certificate $certificate): bool
+    public function update(User $user, Event $event): bool
     {
-        // Administrator → همه
+        // administrator → همه
         if ($user->hasRole('administrator')) {
             return true;
         }
 
-        // Organizer → فقط گواهینامه‌های رویداد خودش
+        // organizer → فقط رویداد خودش
         if ($user->hasRole('organizer')) {
-            return $certificate->event->organizer_id === $user->id;
+            return $event->organizer_id === $user->id;
         }
 
         return false;
@@ -65,10 +75,9 @@ class CertificatePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Certificate $certificate): bool
+    public function delete(User $user, Event $event): bool
     {
-        // فقط Administrator
-        return $user->hasRole('administrator');
+        return $this->update($user, $event);
     }
 
 }
