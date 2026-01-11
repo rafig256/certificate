@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('certificates', function (Blueprint $table) {
-            $table->foreignId('transaction_id')->constrained();
+            $table->foreignIdFor(\App\Models\Transaction::class)->after('has_payment_issue')->nullable();
         });
     }
 

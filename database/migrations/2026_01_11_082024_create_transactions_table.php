@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->enum('type', ['single','multi']);
+            $table->bigInteger('amount')->default(0);
+            $table->enum('type', ['single','multi'])->default('single');
             $table->string('gate')->comment('name of bank gate');
             $table->enum('status',['draft','reject','cancel','payed'])->default('draft');
             $table->timestamps();
