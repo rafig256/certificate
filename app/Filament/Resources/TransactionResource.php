@@ -23,7 +23,7 @@ class TransactionResource extends Resource
     protected static ?string $pluralModelLabel = 'تراکنش ها';
     protected static ?int $navigationSort = 3;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
     public static function form(Form $form): Form
     {
@@ -31,21 +31,39 @@ class TransactionResource extends Resource
             ->schema([
                 Forms\Components\Select::make('user_id')
                     ->required()
+                    ->native(false)
+                    ->label(__('fields.user_name'))
                     ->relationship('user', 'name'),
                 Forms\Components\TextInput::make('amount')
                     ->required()
+                    ->label(__('fields.amount'))
                     ->numeric()
                     ->default(0),
                 Forms\Components\Select::make('type')
                     ->required()
+                    ->native(false)
+                    ->label(__('fields.pay_type'))
+                    ->options([
+                        'single' => __('fields.single_pay'),
+                        'multi' => __('fields.multi_pay'),
+                    ])
 
                 ,
 
                 Forms\Components\TextInput::make('gate')
                     ->required()
+                    ->label(__('fields.gate_name'))
                     ->maxLength(255),
                 Forms\Components\Select::make('status')
-                    ->required(),
+                    ->required()
+                    ->native(false)
+                    ->label(__('fields.pay_status'))
+                    ->options([
+                        'draft' => __('fields.draft_pay'),
+                        'cancel' => __('fields.cancel_pay'),
+                        'reject' => __('fields.reject_pay'),
+                        'payed' => __('fields.payed'),
+                    ]),
             ]);
     }
 
