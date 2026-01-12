@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CertificateHolderResource\Pages;
 use App\Models\CertificateHolder;
 use App\Models\User;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
@@ -16,6 +17,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class CertificateHolderResource extends Resource
 {
@@ -53,6 +55,9 @@ class CertificateHolderResource extends Resource
                             ->imageCropAspectRatio('3:4')
                             ->maxSize(512) // 0.5MB
                             ->nullable()
+                            ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file, Forms\Get $get){
+                                return (string) $get('first_name') ." ". $get('last_name') ."-". Carbon::now()->format('Ymd') .".". $file->getClientOriginalExtension();
+                            })
                             ,
 
                         Select::make('user_id')

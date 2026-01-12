@@ -4,8 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
+use App\Models\Certificate;
+use App\Models\CertificateHolder;
 use App\Models\Transaction;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -47,13 +52,26 @@ class TransactionResource extends Resource
                         'single' => __('fields.single_pay'),
                         'multi' => __('fields.multi_pay'),
                     ])
-
                 ,
 
                 Forms\Components\TextInput::make('gate')
                     ->required()
                     ->label(__('fields.gate_name'))
                     ->maxLength(255),
+
+                Select::make('certificate_holder')
+                    ->label(__('fields.certificate_holder_id'))
+                    ->options(CertificateHolder::pluck('first_name', 'last_name'))
+                    ->native(false)
+                    ->required(),
+
+                Select::make('certificate_holder')
+                    ->relationship(
+                        'certificates',
+                        'certificate_holder_id',
+                        fn($query) => $query
+                        ),
+
                 Forms\Components\Select::make('status')
                     ->required()
                     ->native(false)

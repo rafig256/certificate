@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Certificate extends Model
 {
@@ -52,6 +53,11 @@ class Certificate extends Model
 
         // سایرین → هیچ
         return $query->whereRaw('1 = 0');
+    }
+
+    public function transaction():BelongsTo
+    {
+        return $this->belongsTo(Transaction::class);
     }
 
 }
