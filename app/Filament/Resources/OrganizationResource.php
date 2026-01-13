@@ -9,6 +9,7 @@ use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -30,94 +31,9 @@ class OrganizationResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->unique(
-                        table: Organization::class,
-                        column: 'name',
-                        ignoreRecord: true
-                    )
-                    ->label(__('fields.organize_name'))
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->unique(
-                        table: Organization::class,
-                        column: 'slug',
-                        ignoreRecord: true
-                    )
-                    ->label(__('fields.organize_slug'))
-                    ->maxLength(255),
-
-                FileUpload::make('logo_path')
-                    ->label(__('fields.logo'))
-                    ->directory('organ')
-                    ->visibility('public')
-                    ->image()
-                    ->imageResizeMode('cover')
-                    ->imagePreviewHeight(150)
-                    ->preserveFilenames()
-                    ->maxSize(1024),
-
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->unique(
-                        table: Organization::class,
-                        column: 'email',
-                        ignoreRecord: true
-                    )
-                    ->label(__('fields.email'))
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('website')
-                    ->label(__('fields.website'))
-                    ->unique(
-                        table: Organization::class,
-                        column: 'website',
-                        ignoreRecord: true
-                    )
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('phone')
-                    ->label(__('fields.phone'))
-                    ->unique(
-                        table: Organization::class,
-                        column: 'phone',
-                        ignoreRecord: true
-                    )
-                    ->tel()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('mobile')
-                    ->label(__('fields.mobile'))
-                    ->unique(
-                        table: Organization::class,
-                        column: 'mobile',
-                        ignoreRecord: true
-                    )
-                    ->maxLength(10),
-                Forms\Components\Toggle::make('is_active')
-                    ->label(__('fields.status'))
-                    ->required()
-                    ->inline(false),
-                Forms\Components\Textarea::make('address')
-                    ->label(__('fields.address'))
-                    ->columnSpanFull(),
-
-                Repeater::make('users')
-                    ->label(__('fields.select_users'))
-                    ->hiddenOn('edit')
-                    ->addActionLabel('افزودن کاربر')
-                    ->columnSpanFull()
-                    ->schema([
-                        Select::make('user_id')
-                            ->label(__('fields.admin_name'))
-                            ->options(User::pluck('name', 'id'))
-                            ->required(),
-
-                        TextInput::make('role')
-                            ->label(__('fields.admin_role_name'))
-                            ->required(),
-                    ])
-            ]);
+            ->schema(
+                Organization::GetForm(),
+            );
     }
 
     public static function table(Table $table): Table
