@@ -81,6 +81,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>نمونه گواهینامه‌ها</h2>
+
                 <p>نگاهی به برخی از گواهینامه‌های صادر شده</p>
             </div>
             <div class="cert-slide-container">

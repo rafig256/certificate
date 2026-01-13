@@ -151,11 +151,8 @@ class CertificateHolderResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('first_name')
-                    ->label(__('fields.user_name'))
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('last_name')
-                    ->label(__('fields.last_name'))
+                    ->label(__('fields.full_name'))
+                    ->formatStateUsing(fn($record):string => $record->first_name ." ".$record->last_name)
                     ->searchable(),
 
                 ImageColumn::make('avatar_path')

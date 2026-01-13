@@ -190,6 +190,10 @@ class CertificateResource extends Resource
                     Tables\Actions\DeleteBulkAction::make()
                         ->label('حذف گروهی'),
                 ]),
+            ])
+            ->contentGrid([
+                'md' =>2,
+                'xl' => 3
             ]);
     }
 
