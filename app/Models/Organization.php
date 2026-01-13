@@ -28,8 +28,10 @@ class Organization extends Model
     {
     return
     [
-        Section::make('اطلاعات سازمان')
+        Section::make(__('fields.organ_information'))
             ->columns(2)
+            ->icon('heroicon-o-information-circle')
+            ->collapsible()
             ->schema([
                 TextInput::make('name')
                     ->required()
@@ -70,8 +72,9 @@ class Organization extends Model
                             ->inline(false),
                     ]),
             ]),
-        Section::make('اطلاعات تماس')
+        Section::make(__('fields.contact_information'))
             ->columns(2)
+            ->collapsible()
             ->schema([
                 TextInput::make('email')
                     ->email()
@@ -113,6 +116,7 @@ class Organization extends Model
         Repeater::make('users')
             ->label(__('fields.select_users'))
             ->hiddenOn('edit')
+            ->collapsible()
             ->addActionLabel('افزودن کاربر')
             ->columnSpanFull()
             ->schema([

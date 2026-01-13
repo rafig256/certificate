@@ -7,6 +7,7 @@ use App\Filament\Resources\SignatoryResource\RelationManagers;
 use App\Models\Signatory;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -40,26 +41,17 @@ class SignatoryResource extends Resource
     {
         return $form
             ->schema([
-                // بخش اطلاعات اصلی در یک Card یا Section (اختیاری اما زیباتر)
-                Forms\Components\Section::make('اطلاعات امضاکننده')
+                Section::make(__('fields.signatory_information'))
+                    ->collapsible()
+                    ->description(__('fields.signatory_description'))
                     ->schema([
                         TextInput::make('name')
-                            ->label('نام')
+                            ->label(__('fields.signatory_name'))
                             ->required()
                             ->maxLength(255),
-
-                        TextInput::make('email')
-                            ->label('ایمیل')
-                            ->email()
-                            ->maxLength(255),
-
-                        TextInput::make('phone')
-                            ->label('تلفن')
-                            ->tel()
-                            ->maxLength(20),
-
                         Select::make('type')
                             ->label('نوع')
+                            ->native(false)
                             ->options([
                                 'علمی' => 'علمی',
                                 'دولتی' => 'دولتی',
@@ -68,8 +60,6 @@ class SignatoryResource extends Resource
                                 'سایر' => 'سایر',
                             ])
                             ->required(),
-
-
                         FileUpload::make('logo_path')
                             ->label(__('fields.logo'))
                             ->directory('signer')
@@ -93,26 +83,38 @@ class SignatoryResource extends Resource
                             ->maxSize(1024)
                             ->helperText('فقط فرمت png مجاز است')
                         ,
-
-                        Select::make('user_id')
-                            ->label('کاربر مرتبط')
-                            ->relationship('user', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->required(),
-
                         TextInput::make('level')
                             ->label('سطح')
                             ->numeric()
                             ->default(1),
+                    ])
+                    ->columns(2)
+                    ,
+                    Section::make(__('fields.contact_information'))
+                        ->schema([
+                            TextInput::make('email')
+                                ->label('ایمیل')
+                                ->email()
+                                ->maxLength(255),
 
-                        TextInput::make('responsible')
-                            ->label(__('fields.responsible_person_name'))
-                            ->maxLength(100),
+                            TextInput::make('phone')
+                                ->label('تلفن')
+                                ->tel()
+                                ->maxLength(20),
+                         ])->columns(2),
 
-                     ])->columns(2),
-
-
+                    Section::make(__('fields.admin_information'))
+                ->schema([
+                    Select::make('user_id')
+                        ->label('کاربر مرتبط')
+                        ->relationship('user', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->required(),
+                    TextInput::make('responsible')
+                        ->label(__('fields.responsible_person_name'))
+                        ->maxLength(100),
+                ])->columns(2)
             ]);
     }
 

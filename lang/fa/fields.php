@@ -83,4 +83,10 @@ return [
     'gate_name' => 'درگاه پرداخت بانکی',
     'pay_status' => 'وضعیت پرداخت',
     'full_name' => 'نام و فامیل',
-    ];
+    'organ_information'=> 'اطلاعات سازمان',
+    'contact_information' => 'اطلاعات تماس',
+    'signatory_information' => 'اطلاعات نهاد امضا کننده',
+    'signatory_description' => 'در این بخش اطلاعات مربوط به نهاد امضا کننده را وارد کنید.',
+    'signatory_name' => 'نام رسمی نهاد امضا کننده',
+    'admin_information' => 'اطلاعات مدیر',
+];
