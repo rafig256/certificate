@@ -91,4 +91,10 @@ return [
     'admin_information' => 'اطلاعات مدیر',
     'payer_name' => 'نام واریز کننده',
     'pay_type_table' => 'نوع پرداخت',
+    'activate' => 'فعال کردن',
+    'unactivated' => 'غیرفعالسازی',
+    'activate_message' => 'با موفقیت فعال شد',
+    'inactivate_message' => 'با موفقیت غیرفعال شد',
+    'activate_organ_message' => 'وضعیت سازمان به موفقیت به فعال تغییر کرد.',
+    'inactivate_organ_message' => 'وضعیت سازمان با موفقیت به حالت غیر فعال تغییر کرد.',
 ];

@@ -133,4 +133,13 @@ class Organization extends Model
 
     ];
     }
+
+    public function active(){
+        $this->update(['is_active' => true]);
+    }
+
+    public function unactivated()
+    {
+        $this->update(['is_active' => false]);
+    }
 }

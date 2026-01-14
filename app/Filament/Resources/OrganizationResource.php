@@ -6,6 +6,7 @@ use App\Filament\Resources\OrganizationResource\Pages;
 use App\Filament\Resources\OrganizationResource\RelationManagers;
 use App\Models\Organization;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -60,6 +61,32 @@ class OrganizationResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('is_active' )
+                ->icon('heroicon-o-check-circle')
+                ->color('success')
+                ->action(function ($record) {
+                    $record->active();
+                })
+                ->label(__('fields.activate'))
+                ->after(function(){
+                    Notification::make()->success()->title(__('fields.activate_message'))
+                        ->body(__('fields.activate_organ_message'))->send();
+                })
+                    ->visible(fn($record) => !$record->is_active),
+
+                Tables\Actions\Action::make('unactivated')
+                ->icon('heroicon-o-no-symbol')
+                ->label(__('fields.unactivated'))
+                ->color('danger')
+                ->action(function ($record){
+                    $record->unactivated();
+                })
+                    ->visible(fn($record) => $record->is_active)
+                ->after(function(){
+                    Notification::make()->danger()->title(__('fields.inactivate_message'))
+                        ->body(__('fields.inactivate_organ_message'))->send();
+                })
+                ->requiresConfirmation(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
