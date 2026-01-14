@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum Pay_status: string
+enum Transaction_status: string
 {
     case draft = 'draft';
     case reject = 'reject';

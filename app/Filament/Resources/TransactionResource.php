@@ -99,16 +99,16 @@ class TransactionResource extends Resource
                     ->suffix(" ".config('settings.currency_name'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type')
-                ->label(__('fields.pay_type_table')),
+                ->label(__('fields.pay_type_table'))
+                ->formatStateUsing(fn($state) => $state->label() ),
 
                 Tables\Columns\TextColumn::make('gate')
                     ->label(__('fields.gate_name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                 ->label(__('fields.pay_status'))
-                ->color(function($state) {
-                        return $state->getColor();
-                    })
+                ->color(fn($state) => $state->getColor())
+                ->formatStateUsing(fn($state) => $state->label())
                 ->badge(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

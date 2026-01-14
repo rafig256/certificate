@@ -35,12 +35,14 @@ class OrganizationResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('fields.organize_name'))
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->label(__('fields.organize_slug'))
-                    ->searchable(),
+                    ->searchable()
+                ->description(fn($record) => $record->slug),
+                Tables\Columns\ImageColumn::make('logo_path')
+                ->label(__('fields.logo')),
+
                 Tables\Columns\TextColumn::make('website')
                     ->label(__('fields.website'))
+                    ->url(fn($state) => 'https://www.' . $state,true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->label(__('fields.phone'))
@@ -53,7 +55,8 @@ class OrganizationResource extends Resource
                     ->boolean(),
             ])
             ->filters([
-                //
+                Tables\Filters\TernaryFilter::make('is_active')
+                    ->label(__('fields.status')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

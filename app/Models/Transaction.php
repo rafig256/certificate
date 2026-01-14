@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\Pay_status;
+use App\Enums\Transaction_status;
+use App\Enums\Transaction_type;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -22,7 +23,8 @@ class Transaction extends Model
     protected function casts(): array
     {
         return [
-            'status' => Pay_status::class,
+            'status' => Transaction_status::class,
+            'type' => Transaction_type::class,
         ];
     }
 }

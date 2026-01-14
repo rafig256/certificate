@@ -92,6 +92,7 @@ class Organization extends Model
                         column: 'website',
                         ignoreRecord: true
                     )
+                    ->suffix('https://www.')
                     ->maxLength(255),
                 TextInput::make('phone')
                     ->label(__('fields.phone'))
@@ -109,7 +110,7 @@ class Organization extends Model
                         column: 'mobile',
                         ignoreRecord: true
                     )
-                    ->maxLength(10),
+                    ->maxLength(11),
             ]),
 
 
