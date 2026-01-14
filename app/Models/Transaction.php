@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Pay_status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -16,5 +17,12 @@ class Transaction extends Model
     public function certificates():HasMany
     {
         return $this->hasMany(Certificate::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'status' => Pay_status::class,
+        ];
     }
 }

@@ -89,4 +89,6 @@ return [
     'signatory_description' => 'در این بخش اطلاعات مربوط به نهاد امضا کننده را وارد کنید.',
     'signatory_name' => 'نام رسمی نهاد امضا کننده',
     'admin_information' => 'اطلاعات مدیر',
+    'payer_name' => 'نام واریز کننده',
+    'pay_type_table' => 'نوع پرداخت',
 ];

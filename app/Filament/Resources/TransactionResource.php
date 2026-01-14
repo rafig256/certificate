@@ -89,16 +89,27 @@ class TransactionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label(__('fields.payer_name'))
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->numeric()
+                    ->label(__('fields.amount'))
+                    ->suffix(" ".config('settings.currency_name'))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('type'),
+                Tables\Columns\TextColumn::make('type')
+                ->label(__('fields.pay_type_table')),
+
                 Tables\Columns\TextColumn::make('gate')
+                    ->label(__('fields.gate_name'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')
+                ->label(__('fields.pay_status'))
+                ->color(function($state) {
+                        return $state->getColor();
+                    })
+                ->badge(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
