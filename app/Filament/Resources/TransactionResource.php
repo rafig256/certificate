@@ -6,6 +6,7 @@ use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
 use App\Models\Certificate;
 use App\Models\CertificateHolder;
+use App\Models\Event;
 use App\Models\Transaction;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
@@ -64,18 +65,21 @@ class TransactionResource extends Resource
                     ->label(__('fields.gate_name'))
                     ->maxLength(255),
 
-                Select::make('certificate_holder')
-                    ->label(__('fields.certificate_holder_id'))
-                    ->options(CertificateHolder::pluck('first_name', 'last_name'))
+                Select::make('event')
+                    ->label(__('fields.event_name'))
+                    ->live()
+                    ->native(false)
+                    ->required()
+                    ->options(Event::all()->pluck('title','id'))
+                    ,
+
+                Select::make('certificate')
+                    ->label(__('fields.certificate_owner'))
+                    ->options(function (Builder $query,Forms\Get $get){
+                        return Certificate::query()->where('event_id' ,'=', $get('event'))->pluck('serial','id');
+                    })
                     ->native(false)
                     ->required(),
-
-                Select::make('certificate_holder')
-                    ->relationship(
-                        'certificates',
-                        'certificate_holder_id',
-                        fn($query) => $query
-                        ),
 
                 Forms\Components\Select::make('status')
                     ->required()
