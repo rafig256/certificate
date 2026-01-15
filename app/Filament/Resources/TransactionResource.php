@@ -30,6 +30,11 @@ class TransactionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return __('fields.to_complete');
+    }
+
     public static function form(Form $form): Form
     {
         return $form

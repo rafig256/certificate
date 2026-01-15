@@ -14,6 +14,7 @@ class CertificatesRelationManager extends RelationManager
 
     protected static ?string $title = 'گواهینامه‌های صادر شده';
 
+
     public function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([

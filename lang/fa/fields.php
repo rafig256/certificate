@@ -97,4 +97,5 @@ return [
     'inactivate_message' => 'با موفقیت غیرفعال شد',
     'activate_organ_message' => 'وضعیت سازمان به موفقیت به فعال تغییر کرد.',
     'inactivate_organ_message' => 'وضعیت سازمان با موفقیت به حالت غیر فعال تغییر کرد.',
+    'to_complete' => 'در حال برنامه نویسی',
 ];
