@@ -38,6 +38,16 @@ class CertificateResource extends Resource
         return auth()->user()?->can('viewAny', \App\Models\Certificate::class) ?? false;
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return Certificate::query()->count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'success';
+
+    }
 
     public static function getEloquentQuery(): Builder
     {

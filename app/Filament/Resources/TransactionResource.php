@@ -76,7 +76,7 @@ class TransactionResource extends Resource
                 Select::make('certificate')
                     ->label(__('fields.certificate_owner'))
                     ->options(function (Builder $query,Forms\Get $get){
-                        return Certificate::query()->where('event_id' ,'=', $get('event'))->pluck('serial','id');
+                        $certificates = Certificate::query()->where('event_id' ,'=', $get('event'))->pluck('serial','id');
                     })
                     ->native(false)
                     ->required(),
