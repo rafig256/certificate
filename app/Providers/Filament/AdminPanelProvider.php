@@ -27,6 +27,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
+            ->passwordReset()
             ->font('Vazir')
             ->assets([
                 \Filament\Support\Assets\Css::make('custom-fonts', asset('css/custom-fonts.css')),

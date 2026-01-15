@@ -57,6 +57,10 @@ class CertificatesRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('status')
                     ->label('وضعیت'),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('fields.created_at'))
+                ->date('Y/m/d')
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make('addNewCertificateHolder')
@@ -125,5 +129,11 @@ class CertificatesRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\DeleteAction::make(),
             ]);
+    }
+
+//    در اینجا مشخص می کنیم که در باکسی که بخاطر رابطه ایجاد شده است فقط مشاهده باشد یا ویراش هم مقدور باشد
+    public function isReadOnly(): bool
+    {
+        return false;
     }
 }
