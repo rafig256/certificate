@@ -8,6 +8,7 @@ use App\Models\Organization;
 use App\Models\Signatory;
 use App\ViewModels\HomeViewModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
