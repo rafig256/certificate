@@ -7,6 +7,8 @@
 {{--        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">--}}
 {{--        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">--}}
         <link rel="stylesheet" href="{{asset('css/welcome.css')}}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('storage/home/favicon.png') }}">
+        <link rel="shortcut icon" href="{{ asset('storage/home/favicon.ico') }}">
         {{--slider--}}
 {{--        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">--}}
 {{--        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>--}}
