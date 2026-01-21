@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -29,10 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->registration()
             ->passwordReset()
-            ->font('Vazir')
-            ->assets([
-                \Filament\Support\Assets\Css::make('custom-fonts', asset('css/custom-fonts.css')),
-            ])
+            ->font('Inter',asset('css/custom-fonts.css'),provider: LocalFontProvider::class)
             ->colors([
                 'primary' => Color::Amber,
             ])
