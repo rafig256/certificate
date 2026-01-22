@@ -44,6 +44,9 @@ class RolePermissionSeeder extends Seeder
             // Certificate Holder (domain actions)
             'certificate_holder.link_user',
             'certificate_holder.unlink_user',
+
+            //Panel
+            'access panel'
         ];
 
         foreach ($permissions as $permission) {
@@ -63,14 +66,18 @@ class RolePermissionSeeder extends Seeder
             'admin',
             'organizer',
             'signer',
+            'user',
         ];
 
-        foreach ($roles as $role) {
-            Role::firstOrCreate([
-                'name' => $role,
+        foreach ($roles as $roleName) {
+            $role = Role::firstOrCreate([
+                'name' => $roleName,
                 'guard_name' => 'web',
             ]);
+
+            $role->givePermissionTo('access panel');
         }
+
 
         /**
          * ------------------------------------
@@ -106,6 +113,7 @@ class RolePermissionSeeder extends Seeder
             'signator.view',
             'signator.edit',
         ]);
+
 
         $adminUser = User::firstOrCreate(
             [
