@@ -26,6 +26,10 @@ class TemplateResource extends Resource
     protected static ?int $navigationSort = -100;
     protected static ?string $navigationIcon = 'heroicon-o-paint-brush';
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can('manage');
+    }
 
     public static function form(Form $form): Form
     {

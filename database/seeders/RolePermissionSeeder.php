@@ -57,7 +57,8 @@ class RolePermissionSeeder extends Seeder
             'permission.delete',
 
             //Panel
-            'access panel'
+            'access panel',
+            'manage'
         ];
 
         foreach ($permissions as $permission) {
