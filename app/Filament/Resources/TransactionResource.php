@@ -25,7 +25,6 @@ class TransactionResource extends Resource
 
     protected static ?string $navigationLabel = 'تراکنش';
     protected static ?string $modelLabel = 'تراکنش ها';
-    protected static ?string $navigationGroup = 'مدیریت پنل';
     protected static ?string $pluralModelLabel = 'تراکنش ها';
     protected static ?int $navigationSort = 3;
 
