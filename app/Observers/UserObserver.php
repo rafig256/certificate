@@ -11,7 +11,7 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        //
+        $user->assignRole('user');
     }
 
     /**
@@ -19,7 +19,7 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        $user->assignRole('user');
+        //
     }
 
     /**

@@ -37,6 +37,11 @@ class SignatoryResource extends Resource
 // این مورد برای آدرس URL است (مثلاً /admin/signatories) - بگذار بماند اما انگلیسی باشد بهتر است
     protected static ?string $slug = 'signatories';
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can('signator.view');
+    }
+
     public static function form(Form $form): Form
     {
         return $form

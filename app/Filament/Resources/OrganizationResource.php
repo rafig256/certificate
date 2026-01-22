@@ -22,6 +22,12 @@ class OrganizationResource extends Resource
     protected static ?string $pluralLabel = 'سازمان‌ها';
     protected static ?string $navigationLabel = 'سازمان‌ها';
     protected static ?int $navigationSort = 1;
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can('organs.view');
+    }
+
     public static function form(Form $form): Form
     {
         return $form

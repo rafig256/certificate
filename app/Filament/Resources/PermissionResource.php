@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Spatie\Permission\Models\Permission;
 
@@ -24,6 +25,20 @@ class PermissionResource extends Resource
     protected static ?string $navigationGroup = 'کاربران';
     protected static ?int $navigationSort = 3;
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can('permission.view');
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can('permission.create');
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can('permission.delete');
+    }
 
     public static function form(Form $form): Form
     {

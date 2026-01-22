@@ -31,6 +31,11 @@ class CertificateHolderResource extends Resource
 
     protected static ?string $navigationGroup = 'کاربران';
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can('certificate_holder.view');
+    }
+
     public static function form(Form $form): Form
     {
         return $form

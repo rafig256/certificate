@@ -42,8 +42,19 @@ class RolePermissionSeeder extends Seeder
             'signator.delete',
 
             // Certificate Holder (domain actions)
+            'certificate_holder.view',
             'certificate_holder.link_user',
             'certificate_holder.unlink_user',
+
+            //role
+            'role.view',
+            'role.create',
+            'role.delete',
+
+            //permission
+            'permission.view',
+            'permission.create',
+            'permission.delete',
 
             //Panel
             'access panel'
@@ -95,6 +106,7 @@ class RolePermissionSeeder extends Seeder
             'users.view',
             'organs.view',
             'signator.view',
+            'certificate_holder.view',
             'certificate_holder.link_user',
         ]);
 

@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Spatie\Permission\Models\Role;
 
@@ -24,6 +25,20 @@ class RoleResource extends Resource
     protected static ?string $navigationGroup = 'کاربران';
     protected static ?int $navigationSort = 2;
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->can('role.view');
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->can('role.create');
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->can('role.delete');
+    }
 
     public static function form(Form $form): Form
     {
