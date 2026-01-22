@@ -51,6 +51,13 @@ class Certificate extends Model
             );
         }
 
+        // User → گواهینامه‌های خودش
+        if ($user->hasRole('user')) {
+            return $query->whereHas('certificateHolder', fn ($q) =>
+            $q->where('user_id', $user->id)
+            );
+        }
+
         // سایرین → هیچ
         return $query->whereRaw('1 = 0');
     }

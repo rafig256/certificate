@@ -18,6 +18,7 @@ class CertificatePolicy
             'admin',
             'organizer',
             'signer',
+            'user'
         ]);
     }
 
@@ -39,6 +40,9 @@ class CertificatePolicy
                 ->signatories()
                 ->where('users.id', $user->id)
                 ->exists();
+        }
+        if ($user->hasRole('user')){
+            return $certificate->certificateHolder?->user_id === $user->id;
         }
         return false;
     }
