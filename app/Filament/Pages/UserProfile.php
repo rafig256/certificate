@@ -41,11 +41,28 @@ class UserProfile extends Page
     protected function getFormSchema(): array
     {
         return [
-            TextInput::make('name')->required()->label('نام'),
-            TextInput::make('mobile')->required()->label('موبایل'),
-            TextInput::make('national_code')->label('کد ملی'),
+            TextInput::make('name')->required()->label(__('fields.full_name')),
+            TextInput::make('mobile')
+                ->label(__('fields.mobile'))
+                ->requiredWithout('national_code')
+                ->rule('regex:/^0?9\d{9}$/')
+                ->dehydrateStateUsing(function ($state) {
+                    return ltrim($state, '0');
+                })
+                ->validationMessages([
+                    'required_without' => 'وارد کردن موبایل یا کد ملی الزامی است.',
+                    'regex' => 'فرمت موبایل نامعتبر است.',
+                ]),
+            TextInput::make('national_code')
+                ->label(__('fields.national_code'))
+                ->requiredWithout('mobile')
+                ->rule('digits:10')
+                ->validationMessages([
+                    'required_without' => 'وارد کردن موبایل یا کد ملی الزامی است.',
+                    'digits' => 'کد ملی باید ۱۰ رقم باشد.',
+                ]),
             Select::make('certificate_holder_id')
-                ->label('دارنده گواهینامه')
+                ->label(__('fields.certificate_holder_id'))
                 ->options(function () {
                     $user = Auth::user();
                     return CertificateHolder::query()
