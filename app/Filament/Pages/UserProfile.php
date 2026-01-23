@@ -65,15 +65,25 @@ class UserProfile extends Page
                 ->label(__('fields.certificate_holder_id'))
                 ->options(function () {
                     $user = Auth::user();
-                    return CertificateHolder::query()
-                        ->when($user->mobile, fn($q) => $q->where('mobile', $user->mobile))
-                        ->orWhere(function($q) use ($user) {
-                            $q->where('national_code', $user->national_code);
-                        })
-                        ->get()
-                        ->mapWithKeys(function ($holder) {
-                            return [$holder->id => $holder->first_name . ' ' . $holder->last_name];
-                        })->toArray();
+
+                    // اول سعی کن با کد ملی match کنی
+                    $options = collect();
+                    if ($user->national_code) {
+                        $options = CertificateHolder::query()
+                            ->where('national_code', $user->national_code)
+                            ->get();
+                    }
+
+                    // اگر چیزی پیدا نشد، fallback به موبایل
+                    if ($options->isEmpty() && $user->mobile) {
+                        $options = CertificateHolder::query()
+                            ->where('mobile', $user->mobile)
+                            ->get();
+                    }
+
+                    return $options->mapWithKeys(fn ($holder) => [
+                        $holder->id => $holder->first_name . ' ' . $holder->last_name
+                    ])->toArray();
                 })
                 ->searchable()
                 ->placeholder('انتخاب دارنده گواهینامه'),
