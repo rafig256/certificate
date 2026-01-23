@@ -30,6 +30,8 @@ class CertificateHolderResource extends Resource
     protected static ?string $modelLabel = 'دارنده گواهینامه';
 
     protected static ?string $navigationGroup = 'کاربران';
+    protected static ?int $navigationSort = 2;
+
 
     public static function canViewAny(): bool
     {
