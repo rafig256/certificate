@@ -3,13 +3,18 @@
 namespace App\Filament\Pages;
 
 use App\Models\CertificateHolder;
-use Filament\Actions\Action;
+use Carbon\Carbon;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class UserProfile extends Page
 {
@@ -24,18 +29,35 @@ class UserProfile extends Page
     public $name;
     public $mobile;
     public $national_code;
+    public $email;
     public $certificate_holder_id;
+    public $ch_first_name;
+    public $ch_last_name;
+    public $ch_mobile;
+    public $ch_avatar_path;
+
 
     public function mount(): void
     {
         $user = Auth::user();
 
-        $this->form->fill([
+        $data = [
             'name' => $user->name,
             'mobile' => $user->mobile,
+            'email' => $user->email,
             'national_code' => $user->national_code,
-            'certificate_holder_id' => $user->certificate_holder_id,
-        ]);
+        ];
+
+        if ($user->certificateHolder) {
+            $data = array_merge($data, [
+                'ch_first_name'   => $user->certificateHolder->first_name,
+                'ch_last_name'    => $user->certificateHolder->last_name,
+                'ch_mobile'       => $user->certificateHolder->mobile,
+                'ch_avatar_path'  => $user->certificateHolder->avatar_path,
+            ]);
+        }
+
+        $this->form->fill($data);
     }
 
     protected function getFormSchema(): array
@@ -44,7 +66,9 @@ class UserProfile extends Page
         $connectedHolder = $user->certificateHolder;
 
         return [
-            TextInput::make('name')->required()->label(__('fields.full_name')),
+            TextInput::make('name')
+                ->required()
+                ->label(__('fields.full_name')),
 
             TextInput::make('mobile')
                 ->label(__('fields.mobile'))
@@ -64,6 +88,9 @@ class UserProfile extends Page
                     'required_without' => 'وارد کردن موبایل یا کد ملی الزامی است.',
                     'digits' => 'کد ملی باید ۱۰ رقم باشد.',
                 ]),
+
+            TextInput::make('email')
+                ->label(__('fields.email')),
 
             // نمایش فقط اگر هنوز وصل نشده
             Select::make('certificate_holder_id')
@@ -91,7 +118,7 @@ class UserProfile extends Page
                 })
                 ->searchable()
                 ->placeholder('انتخاب دارنده گواهینامه')
-                ->visible(!$connectedHolder), // **فقط وقتی وصل نشده نمایش داده شود**
+                ->visible(!$connectedHolder),
 
             // نمایش holder وصل شده به صورت متن
             \Filament\Forms\Components\Placeholder::make('certificate_holder_connected')
@@ -99,7 +126,44 @@ class UserProfile extends Page
                 ->content(fn() => $connectedHolder
                     ? $connectedHolder->first_name . ' ' . $connectedHolder->last_name
                     : '')
-                ->visible($connectedHolder !== null), // فقط وقتی وصل شده نمایش داده شود
+                ->visible($connectedHolder !== null),
+
+            Fieldset::make('اطلاعات دارنده گواهینامه')
+                ->visible(fn () => $user->certificateHolder !== null)
+                ->schema([
+
+                    TextInput::make('ch_first_name')
+                        ->label('نام روی گواهینامه'),
+
+                    TextInput::make('ch_last_name')
+                        ->label('فامیل روی گواهینامه'),
+
+                    TextInput::make('ch_mobile')
+                        ->label(__('fields.mobile'))
+                    ,
+
+                    FileUpload::make('ch_avatar_path')
+                        ->label(__('fields.user_avatar'))
+                        ->image()
+                        ->disk('public')
+                        ->directory('user/avatars')
+                        ->imageEditor()
+                        ->imageCropAspectRatio('3:4')
+                        ->maxSize(512) // 0.5MB
+                        ->nullable()
+                        ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file, Get $get) {
+                            return trim(
+                                    ($get('ch_first_name') ?? 'user') . ' ' .
+                                    ($get('ch_last_name') ?? '')
+                                ) . '-' . now()->format('Ymd') . '.' . $file->getClientOriginalExtension();
+                        })
+//                        ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file, Get $get){
+//                            return (string) $get('first_name') ." ". $get('last_name') ."-". Carbon::now()->format('Ymd') .".". $file->getClientOriginalExtension();
+//                        })
+                    ,
+
+                ]),
+
         ];
     }
 
@@ -108,17 +172,47 @@ class UserProfile extends Page
     public function save(): void
     {
         $data = $this->form->getState();
+        $user = Auth::user();
+
+        DB::transaction(function () use ($data, $user) {
+            $user->update([
+                'name' => $data['name'],
+                'mobile' => $data['mobile'],
+                'national_code' => $data['national_code'],
+                'email' => $data['email'],
+            ]);
+
+            $holder = $user->certificateHolder;
+
+            if (!$holder && !empty($data['certificate_holder_id'])) {
+                $holder = CertificateHolder::where('id', $data['certificate_holder_id'])
+                    ->whereNull('user_id')
+                    ->first();
+
+                if ($holder) {
+                    $holder->update([
+                        'user_id' => $user->id,
+                    ]);
+                }
+            }
+
+            if ($holder) {
+                $holder->update([
+                    'first_name'    => $data['ch_first_name'],
+                    'last_name'     => $data['ch_last_name'],
+                    'national_code' => $data['national_code'],
+                    'email'         => $data['email'],
+                    'mobile'        => $data['ch_mobile'],
+                    'avatar_path'   => $data['ch_avatar_path'] ?? $holder->avatar_path,
+                ]);
+            };
+        });
+
+
         Notification::make()
             ->title('موفق')
-            ->body('پروفایل با موفقیت ذخیره شد'.$data['national_code'])
+            ->body('پروفایل با موفقیت ذخیره شد')
             ->success()
             ->send();
-
-        Auth::user()->update([
-            'name' => $data['name'],
-            'mobile' => $data['mobile'],
-            'national_code' => $data['national_code'],
-            'certificate_holder_id' => $data['certificate_holder_id'],
-        ]);
     }
 }
