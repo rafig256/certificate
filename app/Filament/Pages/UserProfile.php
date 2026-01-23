@@ -40,19 +40,22 @@ class UserProfile extends Page
 
     protected function getFormSchema(): array
     {
+        $user = Auth::user();
+        $connectedHolder = $user->certificateHolder;
+
         return [
             TextInput::make('name')->required()->label(__('fields.full_name')),
+
             TextInput::make('mobile')
                 ->label(__('fields.mobile'))
                 ->requiredWithout('national_code')
                 ->rule('regex:/^0?9\d{9}$/')
-                ->dehydrateStateUsing(function ($state) {
-                    return ltrim($state, '0');
-                })
+                ->dehydrateStateUsing(fn($state) => ltrim($state, '0'))
                 ->validationMessages([
                     'required_without' => 'وارد کردن موبایل یا کد ملی الزامی است.',
                     'regex' => 'فرمت موبایل نامعتبر است.',
                 ]),
+
             TextInput::make('national_code')
                 ->label(__('fields.national_code'))
                 ->requiredWithout('mobile')
@@ -61,22 +64,23 @@ class UserProfile extends Page
                     'required_without' => 'وارد کردن موبایل یا کد ملی الزامی است.',
                     'digits' => 'کد ملی باید ۱۰ رقم باشد.',
                 ]),
+
+            // نمایش فقط اگر هنوز وصل نشده
             Select::make('certificate_holder_id')
                 ->label(__('fields.certificate_holder_id'))
-                ->options(function () {
-                    $user = Auth::user();
-
-                    // اول سعی کن با کد ملی match کنی
+                ->options(function () use ($user) {
                     $options = collect();
+
                     if ($user->national_code) {
                         $options = CertificateHolder::query()
+                            ->whereNull('user_id')
                             ->where('national_code', $user->national_code)
                             ->get();
                     }
 
-                    // اگر چیزی پیدا نشد، fallback به موبایل
                     if ($options->isEmpty() && $user->mobile) {
                         $options = CertificateHolder::query()
+                            ->whereNull('user_id')
                             ->where('mobile', $user->mobile)
                             ->get();
                     }
@@ -86,9 +90,19 @@ class UserProfile extends Page
                     ])->toArray();
                 })
                 ->searchable()
-                ->placeholder('انتخاب دارنده گواهینامه'),
+                ->placeholder('انتخاب دارنده گواهینامه')
+                ->visible(!$connectedHolder), // **فقط وقتی وصل نشده نمایش داده شود**
+
+            // نمایش holder وصل شده به صورت متن
+            \Filament\Forms\Components\Placeholder::make('certificate_holder_connected')
+                ->label('دارنده گواهینامه متصل شده')
+                ->content(fn() => $connectedHolder
+                    ? $connectedHolder->first_name . ' ' . $connectedHolder->last_name
+                    : '')
+                ->visible($connectedHolder !== null), // فقط وقتی وصل شده نمایش داده شود
         ];
     }
+
 
 
     public function save(): void
