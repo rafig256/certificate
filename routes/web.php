@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\CertificatePublicController;
-use App\Http\Controllers\OrganizationController;
+use App\Filament\Admin\Pages\Auth\PasswordReset;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,5 +14,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::get('/certificates/{certificate:serial}', [CertificatePublicController::class, 'show'])->name('certificates.show');
+//Route::get('/admin/password-reset', PasswordReset::class)->name('filament.password-reset');
 
 require __DIR__.'/auth.php';
