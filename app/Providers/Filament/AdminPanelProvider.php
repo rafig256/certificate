@@ -19,6 +19,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -28,7 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->registration()
+            ->registration(\App\Filament\Admin\Pages\Auth\Register::class)
             ->passwordReset()
             ->font('Inter',asset('css/custom-fonts.css'),provider: LocalFontProvider::class)
             ->colors([
