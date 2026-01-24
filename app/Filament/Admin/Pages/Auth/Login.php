@@ -20,7 +20,14 @@ class Login extends BaseLogin
                 ->label('رمز عبور')
                 ->password()
                 ->required(),
-            
+
+            Forms\Components\Placeholder::make('forgot_password')
+                ->label('')
+                ->content(
+                    new \Illuminate\Support\HtmlString(
+                        '<a href="'.route('password.request').'">فراموشی رمز عبور؟</a>'
+                    )
+                ),
         ]);
     }
 
