@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(\App\Filament\Admin\Pages\Auth\Login::class)
             ->registration(\App\Filament\Admin\Pages\Auth\Register::class)
             ->passwordReset()
             ->font('Inter',asset('css/custom-fonts.css'),provider: LocalFontProvider::class)
