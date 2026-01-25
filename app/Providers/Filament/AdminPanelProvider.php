@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\Auth\Login;
 use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -29,7 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login(\App\Filament\Admin\Pages\Auth\Login::class)
+            ->login(Login::class)
             ->registration(\App\Filament\Admin\Pages\Auth\Register::class)
             ->passwordReset()
             ->font('Inter',asset('css/custom-fonts.css'),provider: LocalFontProvider::class)
