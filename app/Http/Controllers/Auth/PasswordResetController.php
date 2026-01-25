@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Rules\ValidNationalCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 
@@ -16,7 +17,7 @@ class PasswordResetController extends Controller
     public function submit(Request $request)
     {
         $request->validate([
-            'national_code' => ['required'],
+            'national_code' => ['required' , new ValidNationalCode()],
         ]);
 
         $user = User::where('national_code', $request->national_code)->first();
