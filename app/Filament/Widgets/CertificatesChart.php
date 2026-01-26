@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 class CertificatesChart extends ChartWidget
 {
     protected static ?string $heading = 'روند صدور گواهینامه‌ها';
+    protected int | string | array $columnSpan = [
+        'default' => 12,
+        'md' => 6,
+    ];
+
 
     protected function getData(): array
     {

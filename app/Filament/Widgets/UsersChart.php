@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 class UsersChart extends ChartWidget
 {
     protected static ?string $heading = 'روند ثبت‌نام کاربران';
+    protected int | string | array $columnSpan =[
+        'default' => 12,
+        'md' => 6,
+    ];
+
 
     protected function getData(): array
     {
