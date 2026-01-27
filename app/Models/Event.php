@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Enums\Level;
 use App\Enums\Payment_mode;
+use Illuminate\Database\Eloquent\Model;
 
-class Event extends BaseModel
+class Event extends Model
 {
     protected $guarded = [];
 

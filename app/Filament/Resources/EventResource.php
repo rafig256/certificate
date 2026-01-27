@@ -302,9 +302,9 @@ class EventResource extends Resource
                     })
                     ->html(),
 
-                Tables\Columns\TextColumn::make('jalali.start_at_datetime')
+                Tables\Columns\TextColumn::make('start_at')
                     ->label(__('fields.start_at'))
-//                    ->dateTime('Y/m/d')
+                    ->date('Y/m/d')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('status')
