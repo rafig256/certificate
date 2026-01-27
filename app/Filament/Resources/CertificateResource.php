@@ -160,9 +160,9 @@ class CertificateResource extends Resource
                     ->color('primary')
                 ,
 
-                Tables\Columns\TextColumn::make('issued_at')
+                Tables\Columns\TextColumn::make('jalali.issued_at')
                     ->label(__('fields.issued_at'))
-                    ->date('Y-m-d')
+//                    ->date('Y-m-d')
                     ->sortable(),
 
                 TextColumn::make('status')
