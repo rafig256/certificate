@@ -45,12 +45,10 @@ class EventView extends ViewRecord
                  ======================= */
                 Section::make('زمان و مکان')
                     ->schema([
-                        TextEntry::make('start_at')
-                            ->date('Y/m/d H:i')
+                        TextEntry::make('jalali.start_at_datetime')
                             ->label('زمان شروع'),
 
-                        TextEntry::make('end_at')
-                            ->date('Y/m/d H:i')
+                        TextEntry::make('jalali.end_at_datetime')
                             ->label('زمان پایان'),
 
                         TextEntry::make('location')

@@ -162,7 +162,7 @@ class CertificateResource extends Resource
 
                 Tables\Columns\TextColumn::make('issued_at')
                     ->label(__('fields.issued_at'))
-                    ->date('Y/m/d')
+                    ->formatStateUsing(fn($state,$record) => $record->jalali['issued_at'])
                     ->sortable(),
 
                 TextColumn::make('status')

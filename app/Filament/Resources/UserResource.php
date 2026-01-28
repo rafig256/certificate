@@ -88,7 +88,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->label('ایمیل')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('jalali.created_at')
                     ->label('تاریخ عضویت')
                     ->dateTime('Y/m/d')
                     ->sortable(),

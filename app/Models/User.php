@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Trait\jalaliDate;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +16,7 @@ use Filament\Panel;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
+    use jalaliDate;
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles, Notifiable;
 

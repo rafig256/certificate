@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Trait\jalaliDate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Certificate extends Model
 {
+    use jalaliDate;
     protected $guarded = [];
 
     protected static function booted()

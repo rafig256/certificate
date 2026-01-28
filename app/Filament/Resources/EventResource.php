@@ -304,7 +304,7 @@ class EventResource extends Resource
 
                 Tables\Columns\TextColumn::make('start_at')
                     ->label(__('fields.start_at'))
-                    ->date('Y/m/d')
+                    ->formatStateUsing(fn($state,$record) => $record->jalali['start_at_datetime'])
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('status')

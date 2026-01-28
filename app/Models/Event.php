@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Enums\Level;
 use App\Enums\Payment_mode;
+use App\Trait\jalaliDate;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    use jalaliDate;
     protected $guarded = [];
 
     protected $casts = [
