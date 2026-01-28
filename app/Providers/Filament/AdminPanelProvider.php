@@ -60,6 +60,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->favicon(asset('storage/home/favicon.png'))
             ->authMiddleware([
                 Authenticate::class,
             ])
