@@ -9,6 +9,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -63,6 +64,13 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->brandName(config('settings.app_name'))
+            ->navigationItems([
+                NavigationItem::make('site')
+                ->url(config('app.url'), shouldOpenInNewTab: true)
+                ->icon('heroicon-o-presentation-chart-line')
+                ->label('مشاهده سایت')
+                ->sort(2)]
+            )
             ;
     }
 }
