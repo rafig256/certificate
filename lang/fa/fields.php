@@ -101,4 +101,5 @@ return [
     'event_name' => 'نام رویداد',
     'certificate_owner' => 'گواهینامه - مالک',
     'my_profile' => "پروفایل من",
+    'site_show' => 'مشاهده سایت',
 ];

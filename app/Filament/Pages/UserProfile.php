@@ -21,33 +21,30 @@ class UserProfile extends Page
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
-    protected static ?string $navigationLabel = 'پروفایل من';
-    protected static ?string $title = 'پروفایل من';
-
+    protected static ?int $navigationSort = 1;
     protected static string $view = 'filament.pages.user-profile';
 
-    public $name;
-    public $mobile;
-    public $national_code;
-    public $email;
-    public $certificate_holder_id;
-    public $ch_first_name;
-    public $ch_last_name;
-    public $ch_mobile;
-    public $ch_avatar_path;
+    public $name,$mobile,$national_code,$email,$certificate_holder_id,$ch_first_name,$ch_last_name,$ch_mobile,$ch_avatar_path;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('fields.my_profile');
+    }
+
+    public function getTitle(): string
+    {
+        return __('fields.my_profile');
+    }
 
     public function mount(): void
     {
         $user = Auth::user();
-
         $data = [
             'name' => $user->name,
             'mobile' => $user->mobile,
             'email' => $user->email,
             'national_code' => $user->national_code,
         ];
-
         if ($user->certificateHolder) {
             $data = array_merge($data, [
                 'ch_first_name'   => $user->certificateHolder->first_name,
@@ -56,7 +53,6 @@ class UserProfile extends Page
                 'ch_avatar_path'  => $user->certificateHolder->avatar_path,
             ]);
         }
-
         $this->form->fill($data);
     }
 
@@ -157,13 +153,8 @@ class UserProfile extends Page
                                     ($get('ch_last_name') ?? '')
                                 ) . '-' . now()->format('Ymd') . '.' . $file->getClientOriginalExtension();
                         })
-//                        ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file, Get $get){
-//                            return (string) $get('first_name') ." ". $get('last_name') ."-". Carbon::now()->format('Ymd') .".". $file->getClientOriginalExtension();
-//                        })
                     ,
-
                 ]),
-
         ];
     }
 

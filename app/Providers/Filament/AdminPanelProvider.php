@@ -68,8 +68,8 @@ class AdminPanelProvider extends PanelProvider
                 NavigationItem::make('site')
                 ->url(config('app.url'), shouldOpenInNewTab: true)
                 ->icon('heroicon-o-presentation-chart-line')
-                ->label('مشاهده سایت')
-                ->sort(2)]
+                ->label(__('fields.site_show'))
+                ->sort(1)]
             )
             ;
     }
