@@ -14,11 +14,8 @@ return new class extends Migration
         Schema::create('payment_attempts', function (Blueprint $table) {
             $table->id();
 
-            // اگر در نهایت موفق شد، به payment وصل می‌شود
-            $table->foreignId('payment_id')
-                ->nullable()
-                ->constrained('payments')
-                ->nullOnDelete();
+            $table->unsignedBigInteger('payment_id')->nullable();
+
 
             // چه کسی این تلاش را شروع کرده
             $table->foreignId('payer_user_id')
@@ -35,7 +32,7 @@ return new class extends Migration
             $table->string('authority')->nullable();
 
             // ref_id بعد از پرداخت موفق
-            $table->string('ref_id')->nullable();
+            $table->string('ref_id')->nullable()->unique();
 
             $table->enum('status', [
                 'initiated',
@@ -52,7 +49,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['gateway', 'authority']);
-            $table->index(['gateway', 'ref_id']);
         });
     }
 
