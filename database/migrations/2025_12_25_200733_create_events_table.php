@@ -31,7 +31,7 @@ return new class extends Migration
                 'Closed',
                 'Canceled',
             ])->default('Draft');
-            $table->enum('payment_mode', ['OrganizerPays','ParticipantPays','Free']);
+            $table->enum('payment_mode', ['ParticipantPays','Free']);
             $table->unsignedBigInteger('price_per_person')->default(0);
             $table->boolean('has_exam')->default(false);
             $table->timestamps();

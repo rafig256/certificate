@@ -12,6 +12,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -169,15 +170,42 @@ class CertificateResource extends Resource
                     ->label(__('fields.status'))
                     ->formatStateUsing(fn (?string $state) => __("fields.certificate_statuses.$state")),
 
-                Tables\Columns\IconColumn::make('has_payment_issue')
-                    ->label(__('fields.has_payment_issue'))
-                    ->boolean()
-                    ->trueIcon('heroicon-o-x-circle')
-                    ->falseIcon('heroicon-o-check-circle')
-                    ->trueColor('danger')
-                    ->falseColor('success'),
+//                Tables\Columns\IconColumn::make('has_payment_issue')
+//                    ->label(__('fields.has_payment_issue'))
+//                    ->boolean()
+//                    ->trueIcon('heroicon-o-x-circle')
+//                    ->falseIcon('heroicon-o-check-circle')
+//                    ->trueColor('danger')
+//                    ->falseColor('success'),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('payment_status')
+                    ->label('وضعیت پرداخت')
+                    ->badge()
+                    ->getStateUsing(function ($record) {
+                        if ($record->isPaid()) {
+                            return 'پرداخت شده';
+                        }
+
+                        if ($record->isFree()) {
+                            return 'رایگان';
+                        }
+
+                        return 'نیازمند پرداخت';
+                    })
+                    ->color(function ($record) {
+                        if ($record->isPaid()) {
+                            return 'success';
+                        }
+
+                        if ($record->isFree()) {
+                            return 'gray';
+                        }
+
+                        return 'danger';
+                    }),
+
+
+        Tables\Columns\TextColumn::make('created_at')
                     ->label(__('fields.created_at'))
                     ->dateTime()
                     ->sortable()

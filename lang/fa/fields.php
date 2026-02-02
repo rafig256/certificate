@@ -45,6 +45,7 @@ return [
     'status_canceled' => 'لغو شده',
     'payment_organizer' => 'پرداخت توسط برگزارکننده',
     'payment_participant' => 'پرداخت توسط شرکت‌کننده',
+    'payment_by_user' => 'پرداخت توسط کاربر',
     'payment_free' => 'رایگان',
     'management' => 'مدیریت',
     'times' => 'زمانبندی',

@@ -9,4 +9,9 @@ class Payment extends Model
     protected $casts = [
         'paid_at' => 'datetime',
     ];
+
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
+    }
 }

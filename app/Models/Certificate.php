@@ -69,4 +69,28 @@ class Certificate extends Model
         return $this->belongsTo(Transaction::class);
     }
 
+    public function payment(){
+        return $this->belongsTo(Payment::class);
+    }
+
+    // آیا این گواهینامه نیاز به پرداخت دارد؟
+    public function requiresPayment(): bool
+    {
+        return $this->has_payment_issue === true
+            && $this->payment_id === null;
+    }
+
+    // آیا پرداخت شده؟
+    public function isPaid(): bool
+    {
+        return $this->payment_id !== null;
+    }
+
+    // آیا رایگان است؟
+    public function isFree(): bool
+    {
+        return $this->payment_id === null
+            && $this->has_payment_issue === false;
+    }
+
 }
