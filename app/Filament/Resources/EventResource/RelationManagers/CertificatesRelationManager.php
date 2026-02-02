@@ -7,6 +7,8 @@ use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Illuminate\Support\Facades\DB;
+use App\Enums\Payment_mode;
+
 
 class CertificatesRelationManager extends RelationManager
 {
@@ -23,6 +25,14 @@ class CertificatesRelationManager extends RelationManager
                 ->relationship('certificateHolder', 'first_name')
                 ->searchable()
                 ->preload()
+                ->disableOptionWhen(function ($value) {
+                    $event = $this->getOwnerRecord();
+
+                    return $event
+                        ->certificates()
+                        ->where('certificate_holder_id', $value)
+                        ->exists();
+                })
 
                 ->getSearchResultsUsing(function (string $search): array {
                     return CertificateHolder::query()
@@ -115,7 +125,7 @@ class CertificatesRelationManager extends RelationManager
                             // 2. تعیین وضعیت پرداخت بر اساس event
 
                             $event = $livewire->getOwnerRecord();
-                            $hasPaymentIssue = $event->payment_mode->value === 'ParticipantPays';
+                            $hasPaymentIssue = $event->payment_mode === Payment_mode::ParticipantPays;
                             // مرحله دوم: ساخت گواهینامه و اتصال به رویداد فعلی
                             $livewire->getRelationship()->create([
                                 'certificate_holder_id' => $holder->id,
@@ -136,7 +146,7 @@ class CertificatesRelationManager extends RelationManager
                     ->mutateFormDataUsing(function (array $data, RelationManager $livewire) {
 
                         $event = $livewire->getOwnerRecord();
-                        $data['has_payment_issue'] = $event->payment_mode->value === 'ParticipantPays';
+                        $data['has_payment_issue'] = $event->payment_mode === Payment_mode::ParticipantPays;
                         $data['payment_id'] = null;
                         $data['status'] = 'active';
 
