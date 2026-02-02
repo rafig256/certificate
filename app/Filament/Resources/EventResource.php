@@ -255,8 +255,7 @@ class EventResource extends Resource
                     ->label(__('fields.payment_mode'))
                     ->options(function () {
                         $options = [
-                            'OrganizerPays' => __('fields.payment_organizer'),
-                            'ParticipantPays' => __('fields.payment_participant'),
+                            'ParticipantPays' => __('fields.payment_by_user'),
                         ];
 
                         if (Auth::user()?->hasRole('administrator')) {

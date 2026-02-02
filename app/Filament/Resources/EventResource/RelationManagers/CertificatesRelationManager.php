@@ -99,9 +99,10 @@ class CertificatesRelationManager extends RelationManager
                                 'unique' => 'این شماره موبایل قبلاً ثبت شده است.',
                             ]),
                     ])
-                    // ۲. متد جادویی برای مدیریت ذخیره‌سازی سفارشی
+                    // ۲. مدیریت ذخیره‌سازی سفارشی
                     ->action(function (array $data, RelationManager $livewire) {
                         DB::transaction(function () use ($data, $livewire){
+
                             // مرحله اول: ساخت دارنده گواهبنامه
                             $holder = CertificateHolder::create([
                                 'first_name'    => $data['first_name'],
@@ -111,11 +112,17 @@ class CertificatesRelationManager extends RelationManager
                                 'email'         => $data['email'],
                             ]);
 
+                            // 2. تعیین وضعیت پرداخت بر اساس event
+
+                            $event = $livewire->getOwnerRecord();
+                            $hasPaymentIssue = $event->payment_mode->value === 'ParticipantPays';
                             // مرحله دوم: ساخت گواهینامه و اتصال به رویداد فعلی
                             $livewire->getRelationship()->create([
                                 'certificate_holder_id' => $holder->id,
 //                            TODO: dynamization status
                                 'status'    => 'active',
+                                'has_payment_issue'    => $hasPaymentIssue,
+                                'payment_id'           => null,
                             ]);
                         });
 
@@ -125,8 +132,18 @@ class CertificatesRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->label('افزودن گواهینامه برای کاربر موجود')
                     ->modalHeading('صدور گواهینامه برای کاربر سیستمی')
-                ,
-            ])
+
+                    ->mutateFormDataUsing(function (array $data, RelationManager $livewire) {
+
+                        $event = $livewire->getOwnerRecord();
+                        $data['has_payment_issue'] = $event->payment_mode->value === 'ParticipantPays';
+                        $data['payment_id'] = null;
+                        $data['status'] = 'active';
+
+                        return $data;
+                    }),
+
+        ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
             ]);
