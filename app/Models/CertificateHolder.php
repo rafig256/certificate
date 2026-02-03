@@ -12,6 +12,7 @@ class CertificateHolder extends Model
 
     protected $guarded = [];
 
+
     public function certificate()
     {
         return $this->hasMany(Certificate::class);

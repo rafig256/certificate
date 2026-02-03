@@ -6,6 +6,7 @@ use App\Models\CertificateHolder;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Payment_mode;
 
@@ -22,8 +23,8 @@ class CertificatesRelationManager extends RelationManager
         return $form->schema([
             Forms\Components\Select::make('certificate_holder_id')
                 ->label('کاربر موجود')
-                ->relationship('certificateHolder', 'first_name')
-                ->searchable()
+                ->relationship('certificateHolder', 'full_name')
+                ->searchable(['first_name', 'last_name', 'national_code'])
                 ->preload()
                 ->disableOptionWhen(function ($value) {
                     $event = $this->getOwnerRecord();
@@ -33,6 +34,9 @@ class CertificatesRelationManager extends RelationManager
                         ->where('certificate_holder_id', $value)
                         ->exists();
                 })
+                ->getOptionLabelFromRecordUsing(
+                    fn ($record) => $record->full_name
+                )
 
                 ->getSearchResultsUsing(function (string $search): array {
                     return CertificateHolder::query()
@@ -62,16 +66,35 @@ class CertificatesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('certificateHolder.full_name')
-
+                TextColumn::make('certificateHolder.full_name')
                     ->label('دارنده'),
 
-                Tables\Columns\TextColumn::make('status')
-                    ->label('وضعیت'),
+                TextColumn::make('status')
+                    ->label(__('fields.status'))
+                    ->badge()
+                    ->formatStateUsing(fn (string $state) => match ($state) {
+                        'draft'   => 'پیش‌نویس',
+                        'active'  => 'فعال',
+                        'revoked' => 'لغو شده',
+                        default   => $state,
+                    })
+                    ->color(fn (string $state) => match ($state) {
+                        'draft'   => 'gray',
+                        'active'  => 'success',
+                        'revoked' => 'danger',
+                        default   => 'secondary',
+                    }),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('has_payment_issue')
+                    ->label('وضعیت پرداخت')
+                    ->badge()
+                    ->formatStateUsing(fn (bool $state) => !$state ? 'پرداخت شده' : 'پرداخت نشده')
+                    ->color(fn (bool $state) => !$state ? 'success' : 'warning'),
+
+
+        TextColumn::make('issued_at')
                     ->label(__('fields.created_at'))
-                ->date('Y/m/d')
+                    ->getStateUsing(fn($record) => $record->jalali['issued_at'])
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make('addNewCertificateHolder')
