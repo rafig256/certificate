@@ -103,4 +103,7 @@ return [
     'certificate_owner' => 'گواهینامه - مالک',
     'my_profile' => "پروفایل من",
     'site_show' => 'مشاهده سایت',
+    'save' => 'ذخیره',
+    'wallet_management' => 'شارژ کیف پول',
+    'wallet_charge' => 'صفحه ی شارژ',
 ];

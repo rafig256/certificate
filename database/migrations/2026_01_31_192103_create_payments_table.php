@@ -16,6 +16,7 @@ return new class extends Migration
 
             // چه کسی پرداخت کرده (کاربر، سازمان‌دهنده، ادمین — همگی user هستند)
             $table->foreignId('payer_user_id')
+                ->nullable()
                 ->constrained('users')
                 ->cascadeOnDelete();
 
@@ -36,6 +37,11 @@ return new class extends Migration
             $table->foreignId('source_attempt_id')
                 ->nullable()
                 ->constrained('payment_attempts')
+                ->nullOnDelete();
+
+            $table->foreignId('performed_by_user_id')
+                ->nullable()
+                ->constrained('users')
                 ->nullOnDelete();
 
             $table->timestamps();
