@@ -54,7 +54,15 @@ class UserResource extends Resource
                     ->required(fn (string $context): bool => $context === 'create'),
 
                 Forms\Components\TextInput::make('mobile')
-                    ->label(__('fields.mobile')),
+                    ->label(__('fields.mobile'))
+                    ->numeric()
+                    ->minLength(10)
+                    ->maxLength(11)
+                    ->regex('/^(09|9)\d{9}$/')
+                    ->dehydrateStateUsing(function ($state) {
+                        // حذف صفر اول اگر وجود داشته باشد
+                        return ltrim($state, '0');
+                    }),
 
                 Select::make('roles')
                     ->label('نقش‌ها')
