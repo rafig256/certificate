@@ -83,4 +83,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         }
         return asset('storage/user/avatars/avatar-default.png');
     }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
 }

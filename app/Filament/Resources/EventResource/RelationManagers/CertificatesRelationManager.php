@@ -4,11 +4,13 @@ namespace App\Filament\Resources\EventResource\RelationManagers;
 
 use App\Models\CertificateHolder;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Payment_mode;
+use Illuminate\Validation\ValidationException;
 
 
 class CertificatesRelationManager extends RelationManager
@@ -187,13 +189,35 @@ class CertificatesRelationManager extends RelationManager
                     ->requiresConfirmation()
                     ->action(function ($record) {
 
-                        app(\App\Services\Payments\WalletPaymentService::class)
-                            ->payForCertificate(
-                                certificate: $record,
-                                payerUserId: auth()->id()
-                            );
-                    })
-                    ->successNotificationTitle('پرداخت با موفقیت انجام شد'),
+                        try {
+                            app(\App\Services\Payments\WalletPaymentService::class)
+                                ->payForCertificate(
+                                    certificate: $record,
+                                    payerUserId: auth()->id()
+                                );
+
+                            Notification::make()
+                                ->title('پرداخت با موفقیت انجام شد')
+                                ->success()
+                                ->send();
+
+                        } catch (ValidationException $e) {
+                            Notification::make()
+                                ->title('پرداخت انجام نشد')
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->send();
+
+                        } catch (\Throwable $e) {
+                            Notification::make()
+                                ->title('خطای سیستمی')
+                                ->body('عملیات پرداخت با خطا مواجه شد.')
+                                ->danger()
+                                ->send();
+
+                            report($e);
+                        }
+                    }),
             ]);
     }
 

@@ -12,6 +12,9 @@ class UserObserver
     public function created(User $user): void
     {
         $user->assignRole('user');
+        $user->wallet()->create([
+            'balance' => 0,
+        ]);
     }
 
     /**
