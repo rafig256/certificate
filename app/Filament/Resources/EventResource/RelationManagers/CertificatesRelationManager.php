@@ -176,9 +176,24 @@ class CertificatesRelationManager extends RelationManager
                         return $data;
                     }),
 
-        ])
+            ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('payFromWallet')
+                    ->label('پرداخت از کیف پول')
+                    ->icon('heroicon-o-wallet')
+                    ->color('success')
+                    ->visible(fn ($record) => $record?->has_payment_issue === 1)
+                    ->requiresConfirmation()
+                    ->action(function ($record) {
+
+                        app(\App\Services\Payments\WalletPaymentService::class)
+                            ->payForCertificate(
+                                certificate: $record,
+                                payerUserId: auth()->id()
+                            );
+                    })
+                    ->successNotificationTitle('پرداخت با موفقیت انجام شد'),
             ]);
     }
 
