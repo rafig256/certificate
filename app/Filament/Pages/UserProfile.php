@@ -3,7 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\CertificateHolder;
-use Carbon\Carbon;
+use App\Services\JalaliDateService;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -15,10 +15,16 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Filament\Tables;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Infolists;
+use Filament\Infolists\Contracts\HasInfolists;
 
-class UserProfile extends Page
+class UserProfile extends Page implements HasTable, HasInfolists
 {
     use InteractsWithForms;
+    use Tables\Concerns\InteractsWithTable;
+    use Infolists\Concerns\InteractsWithInfolists;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?int $navigationSort = 1;
@@ -206,4 +212,43 @@ class UserProfile extends Page
             ->success()
             ->send();
     }
+
+    public function walletInfolist(Infolists\Infolist $infolist): Infolists\Infolist
+    {
+        return $infolist
+            ->record(Auth::user()->wallet)
+            ->schema([
+                Infolists\Components\TextEntry::make('balance')
+                    ->label('موجودی کیف پول')
+                    ->formatStateUsing(fn ($state) => number_format($state) . ' تومان'),
+            ]);
+    }
+
+    public function table(Tables\Table $table): Tables\Table
+    {
+        return $table
+            ->query(
+                Auth::user()
+                    ->wallet
+                    ->transactions()
+                    ->getQuery()
+            )
+            ->columns([
+                Tables\Columns\TextColumn::make('amount')
+                    ->label('مبلغ')
+                    ->formatStateUsing(fn ($state) => number_format($state)),
+
+                Tables\Columns\TextColumn::make('type')
+                    ->label('نوع'),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('تاریخ')
+                    ->formatStateUsing(function ($state, $record) {
+                        return app(JalaliDateService::class)->toJalali($record->created_at, false);
+                    })
+                ,
+            ])
+            ->paginated([10, 25, 50]);
+    }
+
 }
