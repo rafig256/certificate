@@ -106,4 +106,10 @@ return [
     'save' => 'ذخیره',
     'wallet_management' => 'شارژ کیف پول',
     'wallet_charge' => 'صفحه ی شارژ',
+    'pay_with_wallet' => 'پرداخت از کیف',
+    'require_to_pay' => 'نیازمند پرداخت',
+    'wallet_payment_success' => 'پرداخت از کیف پول با موفقیت انجام شد',
+    'wallet_payment_failed' => 'پرداخت از کیف پول با مشکل مواجه شد',
+    'confirm_wallet_payment_description' => 'آیا مطمئن هستید که می خواهید هزینه ی گواهینامه/ها را از کیف پول خود پرداخت کنید؟'
+
 ];

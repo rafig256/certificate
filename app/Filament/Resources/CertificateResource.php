@@ -10,15 +10,18 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
+use Illuminate\Validation\ValidationException;
 
 class CertificateResource extends Resource
 {
@@ -130,23 +133,25 @@ class CertificateResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordAction(null)
             ->columns([
-                Tables\Columns\TextColumn::make('event.title')
+                TextColumn::make('event.title')
                     ->label(__('fields.event_id'))
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('certificateHolder.full_name')
+                TextColumn::make('certificateHolder.full_name')
                     ->label(__('fields.certificate_holder_id'))
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('serial')
+                TextColumn::make('serial')
                     ->label(__('fields.serial'))
                     ->searchable()
                     ->copyable()
                     ->copyMessage('شماره سریال کپی شد')
-                    ->copyMessageDuration(1500),
+                    ->copyMessageDuration(1500)
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 IconColumn::make('public_link')
                     ->label(__('fields.link'))
@@ -154,86 +159,71 @@ class CertificateResource extends Resource
                     ->state(fn () => true)
                     ->tooltip('مشاهده گواهینامه')
                     ->alignCenter()
-                    ->url(fn ($record) =>
-                    route('certificates.show', $record->serial)
-                    )
+                    ->url(fn ($record) => route('certificates.show', $record->serial))
                     ->openUrlInNewTab()
-                    ->color('primary')
-                ,
+                    ->color('primary'),
 
-                Tables\Columns\TextColumn::make('issued_at')
+                TextColumn::make('issued_at')
                     ->label(__('fields.issued_at'))
-                    ->formatStateUsing(fn($state,$record) => $record->jalali['issued_at'])
+                    ->formatStateUsing(fn ($state, $record) => $record->jalali['issued_at'])
                     ->sortable(),
 
-                TextColumn::make('status')
+                Tables\Columns\ViewColumn::make('status_and_payment')
                     ->label(__('fields.status'))
-                    ->formatStateUsing(fn (?string $state) => __("fields.certificate_statuses.$state")),
+                    ->view('filament.columns.status_and_payment')
+                    ->getStateUsing(fn ($record) => [
+                        'status' => $record->status,
+                        'has_payment_issue' => $record->has_payment_issue,
+                    ]),
 
-//                Tables\Columns\IconColumn::make('has_payment_issue')
-//                    ->label(__('fields.has_payment_issue'))
-//                    ->boolean()
-//                    ->trueIcon('heroicon-o-x-circle')
-//                    ->falseIcon('heroicon-o-check-circle')
-//                    ->trueColor('danger')
-//                    ->falseColor('success'),
-
-                TextColumn::make('payment_status')
-                    ->label('وضعیت پرداخت')
-                    ->badge()
-                    ->getStateUsing(function ($record) {
-                        if ($record->isPaid()) {
-                            return 'پرداخت شده';
-                        }
-
-                        if ($record->isFree()) {
-                            return 'رایگان';
-                        }
-
-                        return 'نیازمند پرداخت';
-                    })
-                    ->color(function ($record) {
-                        if ($record->isPaid()) {
-                            return 'success';
-                        }
-
-                        if ($record->isFree()) {
-                            return 'gray';
-                        }
-
-                        return 'danger';
-                    }),
-
-
-        Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('fields.created_at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('fields.updated_at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
+
             ->actions([
-                Tables\Actions\EditAction::make()
+                Tables\Actions\Action::make('payFromWallet')
                     ->label('')
-                    ->tooltip('ویرایش')
-                    ->icon('heroicon-o-pencil-square')
+                    ->tooltip(__('fields.pay_with_wallet'))
+                    ->icon('heroicon-o-wallet')
+                    ->color('success')
+                    ->visible(fn ($record) => $record?->has_payment_issue === 1)
+                    ->requiresConfirmation()
+                    ->modalHeading(__('fields.pay_with_wallet'))
+                    ->modalDescription(__('fields.confirm_wallet_payment_description'))
+                    ->modalSubmitActionLabel(__('fields.pay_with_wallet'))
+                    ->action(fn ($record) => self::pay($record)),
             ])
+
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->label('حذف گروهی'),
                 ]),
-            ])
-            ->contentGrid([
-                'md' =>2,
-                'xl' => 3
             ]);
     }
+
+    protected static function pay($record): void
+    {
+        try {
+            app(\App\Services\Payments\WalletPaymentService::class)
+                ->payForCertificate(
+                    certificate: $record,
+                    payerUserId: auth()->id()
+                );
+
+            Notification::make()
+                ->title(__('fields.wallet_payment_success'))
+                ->success()
+                ->send();
+
+        } catch (\Throwable $e) {
+            Notification::make()
+                ->title(__('fields.wallet_payment_failed'))
+                ->danger()
+                ->send();
+
+            report($e);
+        }
+    }
+
 
 
     public static function getRelations(): array

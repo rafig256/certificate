@@ -182,7 +182,7 @@ class CertificatesRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('payFromWallet')
-                    ->label('پرداخت از کیف پول')
+                    ->label(__('fields.pay_with_wallet'))
                     ->icon('heroicon-o-wallet')
                     ->color('success')
                     ->visible(fn ($record) => $record?->has_payment_issue === 1)

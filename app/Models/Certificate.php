@@ -83,7 +83,7 @@ class Certificate extends Model
     // آیا پرداخت شده؟
     public function isPaid(): bool
     {
-        return $this->payment_id !== null;
+        return $this->has_payment_issue == 0;
     }
 
     // آیا رایگان است؟
