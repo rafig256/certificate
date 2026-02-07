@@ -218,7 +218,29 @@ class CertificatesRelationManager extends RelationManager
                             report($e);
                         }
                     }),
-            ]);
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkAction::make('payFromWalletBulk')
+                    ->label(__('fields.pay_bulk'))
+                    ->icon('heroicon-o-wallet')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action(function (\Illuminate\Support\Collection $records) {
+                        $records = $records->filter(
+                            fn ($r) => $r->has_payment_issue
+                        );
+
+                        if ($records->isEmpty()) {
+                            Notification::make()
+                                ->warning()
+                                ->title(__('fields.nothing_to_pay'))
+                                ->send();
+
+                            return;
+                        }
+                    })
+            ])
+            ;
     }
 
 //    در اینجا مشخص می کنیم که در باکسی که بخاطر رابطه ایجاد شده است فقط مشاهده باشد یا ویراش هم مقدور باشد
