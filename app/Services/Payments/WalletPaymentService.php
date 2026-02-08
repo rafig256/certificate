@@ -12,18 +12,14 @@ use Illuminate\Validation\ValidationException;
 
 class WalletPaymentService
 {
-    public function payForCertificate(Certificate $certificate, int $payerUserId): PaymentResult
-    {
-        if (! $certificate->has_payment_issue) {
-            return new PaymentResult(
-                success: false,
-                message: 'این گواهینامه قبلاً تسویه شده است.'
-            );
-        }
-
-        $amount = $certificate->event->price_per_person;
-
-        DB::transaction(function () use ($certificate, $payerUserId, $amount) {
+    /**
+     * پرداخت تکی یک گواهینامه با کیف پول
+     */
+    public function payForCertificate(
+        Certificate $certificate,
+        int $payerUserId
+    ): PaymentResult {
+        DB::transaction(function () use ($certificate, $payerUserId) {
 
             $user = User::query()
                 ->with('wallet')
@@ -36,33 +32,7 @@ class WalletPaymentService
                 ]);
             }
 
-            if ($user->wallet->balance < $amount) {
-                throw ValidationException::withMessages([
-                    'wallet' => 'اعتبار کیف پول کافی نیست.',
-                ]);
-            }
-
-            $payment = Payment::create([
-                'payer_user_id' => $user->id,
-                'amount'        => $amount,
-                'method'        => 'wallet',
-                'paid_at'       => now(),
-            ]);
-
-            WalletTransaction::create([
-                'wallet_id'   => $user->wallet->id,
-                'payment_id'  => $payment->id,
-                'amount'      => $amount,
-                'type'        => 'withdraw',
-                'description' => 'پرداخت گواهینامه #' . $certificate->id,
-            ]);
-
-            $user->wallet->decrement('balance', $amount);
-
-            $certificate->update([
-                'payment_id'        => $payment->id,
-                'has_payment_issue' => false,
-            ]);
+            $this->performWalletPayment($certificate, $user);
         });
 
         return new PaymentResult(
@@ -72,10 +42,15 @@ class WalletPaymentService
         );
     }
 
-    public function payForCertificates(Collection $certificates, int $payerUserId): PaymentResult
-    {
+    /**
+     * پرداخت دسته‌جمعی گواهینامه‌ها با کیف پول
+     */
+    public function payForCertificates(
+        Collection $certificates,
+        int $payerUserId
+    ): PaymentResult {
         $payableCertificates = $certificates
-            ->filter(fn ($c) => $c->has_payment_issue);
+            ->filter(fn (Certificate $c) => $c->has_payment_issue);
 
         if ($payableCertificates->isEmpty()) {
             return new PaymentResult(
@@ -84,43 +59,44 @@ class WalletPaymentService
             );
         }
 
-        $totalAmount = $payableCertificates
-            ->sum(fn (Certificate $certificate) => $certificate->event->price_per_person);
+        DB::transaction(function () use (
+            $payableCertificates,
+            $payerUserId,
+            &$paidCount,
+            &$failedCount
+        ) {
 
-        $user = User::query()
-            ->with('wallet')
-            ->lockForUpdate()
-            ->findOrFail($payerUserId);
+            $user = User::query()
+                ->with('wallet')
+                ->lockForUpdate()
+                ->findOrFail($payerUserId);
 
-        if (! $user->wallet) {
-            throw ValidationException::withMessages([
-                'wallet' => 'کیف پول برای این کاربر وجود ندارد.',
-            ]);
-        }
+            if (! $user->wallet) {
+                throw ValidationException::withMessages([
+                    'wallet' => 'کیف پول برای این کاربر وجود ندارد.',
+                ]);
+            }
 
-        if ($user->wallet->balance < $totalAmount) {
-            throw ValidationException::withMessages([
-                'wallet' => 'موجودی کیف پول برای پرداخت همه گواهینامه‌ها کافی نیست.',
-            ]);
-        }
+            $totalAmount = $payableCertificates
+                ->sum(fn (Certificate $c) => $c->event->price_per_person);
 
-        $paidCount   = 0;
-        $failedCount = 0;
+            if ($user->wallet->balance < $totalAmount) {
+                throw ValidationException::withMessages([
+                    'wallet' => 'موجودی کیف پول برای پرداخت همه گواهینامه‌ها کافی نیست.',
+                ]);
+            }
 
-        DB::transaction(function () use ($payableCertificates, $payerUserId, &$paidCount, &$failedCount) {
-
+            $paidCount   = 0;
+            $failedCount = 0;
 
             foreach ($payableCertificates as $certificate) {
                 try {
-                    $this->payForCertificate($certificate, $payerUserId);
+                    $this->performWalletPayment($certificate, $user);
                     $paidCount++;
-                    }
-                catch (\Throwable $e){
-                    // این پرداخت خاص شکست خورده
+                } catch (\Throwable $e) {
                     $failedCount++;
                     report($e);
-                    // ادامه بده، کل batch نباید fail شود
-                    continue;
+                    // ادامه بده؛ کل batch نباید fail شود
                 }
             }
         });
@@ -131,7 +107,52 @@ class WalletPaymentService
                 ? 'پرداخت همه گواهینامه‌ها با موفقیت انجام شد.'
                 : 'پرداخت انجام شد، اما برخی گواهینامه‌ها تسویه نشدند.',
             paidCount: $paidCount,
-            failedCount: $failedCount,
+            failedCount: $failedCount
         );
+    }
+
+    /**
+     * هسته‌ی پرداخت با کیف پول (بدون transaction و notification)
+     * فقط یک گواهینامه را تسویه می‌کند یا exception می‌اندازد
+     */
+    private function performWalletPayment(
+        Certificate $certificate,
+        User $user
+    ): void {
+        if (! $certificate->has_payment_issue) {
+            throw ValidationException::withMessages([
+                'certificate' => 'این گواهینامه قبلاً تسویه شده است.',
+            ]);
+        }
+
+        $amount = $certificate->event->price_per_person;
+
+        if ($user->wallet->balance < $amount) {
+            throw ValidationException::withMessages([
+                'wallet' => 'اعتبار کیف پول کافی نیست.',
+            ]);
+        }
+
+        $payment = Payment::create([
+            'payer_user_id' => $user->id,
+            'amount'        => $amount,
+            'method'        => 'wallet',
+            'paid_at'       => now(),
+        ]);
+
+        WalletTransaction::create([
+            'wallet_id'   => $user->wallet->id,
+            'payment_id'  => $payment->id,
+            'amount'      => $amount,
+            'type'        => 'withdraw',
+            'description' => 'پرداخت گواهینامه #' . $certificate->id,
+        ]);
+
+        $user->wallet->decrement('balance', $amount);
+
+        $certificate->update([
+            'payment_id'        => $payment->id,
+            'has_payment_issue' => false,
+        ]);
     }
 }
