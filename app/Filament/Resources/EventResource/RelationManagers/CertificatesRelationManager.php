@@ -9,6 +9,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Payment_mode;
 use Illuminate\Validation\ValidationException;
@@ -220,19 +221,33 @@ class CertificatesRelationManager extends RelationManager
                         }
                     }),
             ])
+            ->filters([
+                TernaryFilter::make('has_payment_issue')
+                    ->label(__('fields.payment_status'))
+                    ->trueLabel(__('fields.unpaid'))
+                    ->falseLabel(__('fields.paid'))
+                    ->queries(
+                        true: fn ($query) => $query->where('has_payment_issue', true),
+                        false: fn ($query) => $query->where('has_payment_issue', false),
+                    ),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkAction::make('payFromWalletBulk')
                     ->label(__('fields.pay_bulk'))
                     ->icon('heroicon-o-wallet')
                     ->color('success')
                     ->requiresConfirmation()
+                    ->modalHeading(__('fields.pay_bulk'))
+                    ->modalDescription(fn ($records) =>
+                    new \Illuminate\Support\HtmlString(
+                        __('fields.bulk_payment_confirm', [
+                            'count' => $records->where('has_payment_issue', true)->count(),
+                            'balance' => number_format(auth()->user()->wallet->balance ?? 0),
+                        ])
+                    )
+                    )
                     ->action(function (\Illuminate\Support\Collection $records) {
-
-                        // فقط گواهینامه‌های نیازمند پرداخت
-                        $certificates = $records->filter(
-                            fn ($record) => $record->has_payment_issue
-                        );
-
+                        $certificates = $records;
                         if ($certificates->isEmpty()) {
                             Notification::make()
                                 ->warning()
@@ -268,7 +283,7 @@ class CertificatesRelationManager extends RelationManager
                                 ->body(collect($e->errors())->flatten()->first())
                                 ->send();
                         }
-                    }),
+                    })
             ]);
     }
 
