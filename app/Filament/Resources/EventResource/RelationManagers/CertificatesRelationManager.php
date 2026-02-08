@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\EventResource\RelationManagers;
 
 use App\Models\CertificateHolder;
+use App\Services\Payments\WalletPaymentService;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -226,11 +227,13 @@ class CertificatesRelationManager extends RelationManager
                     ->color('success')
                     ->requiresConfirmation()
                     ->action(function (\Illuminate\Support\Collection $records) {
-                        $records = $records->filter(
-                            fn ($r) => $r->has_payment_issue
+
+                        // فقط گواهینامه‌های نیازمند پرداخت
+                        $certificates = $records->filter(
+                            fn ($record) => $record->has_payment_issue
                         );
 
-                        if ($records->isEmpty()) {
+                        if ($certificates->isEmpty()) {
                             Notification::make()
                                 ->warning()
                                 ->title(__('fields.nothing_to_pay'))
@@ -238,9 +241,35 @@ class CertificatesRelationManager extends RelationManager
 
                             return;
                         }
-                    })
-            ])
-            ;
+
+                        /** @var WalletPaymentService $service */
+                        $service = app(WalletPaymentService::class);
+
+                        try {
+                            $result = $service->payForCertificates(
+                                $certificates,
+                                auth()->id()
+                            );
+
+                            Notification::make()
+                                ->success()
+                                ->title($result->message)
+                                ->body(
+                                    __('fields.paid_count') . ': ' . $result->paidCount .
+                                    ' | ' .
+                                    __('fields.failed_count') . ': ' . $result->failedCount
+                                )
+                                ->send();
+
+                        } catch (\Illuminate\Validation\ValidationException $e) {
+                            Notification::make()
+                                ->danger()
+                                ->title(__('fields.payment_failed'))
+                                ->body(collect($e->errors())->flatten()->first())
+                                ->send();
+                        }
+                    }),
+            ]);
     }
 
 //    در اینجا مشخص می کنیم که در باکسی که بخاطر رابطه ایجاد شده است فقط مشاهده باشد یا ویراش هم مقدور باشد
