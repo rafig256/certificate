@@ -85,30 +85,53 @@ class WalletPaymentService
         }
 
         $totalAmount = $payableCertificates
-            ->sum(fn ($c) => $c->event->price_per_person);
+            ->sum(fn (Certificate $certificate) => $certificate->event->price_per_person);
 
-        DB::transaction(function () use ($payableCertificates, $payerUserId, $totalAmount) {
+        $user = User::query()
+            ->with('wallet')
+            ->lockForUpdate()
+            ->findOrFail($payerUserId);
 
-            $user = User::query()
-                ->with('wallet')
-                ->lockForUpdate()
-                ->findOrFail($payerUserId);
+        if (! $user->wallet) {
+            throw ValidationException::withMessages([
+                'wallet' => 'کیف پول برای این کاربر وجود ندارد.',
+            ]);
+        }
 
-            if (! $user->wallet || $user->wallet->balance < $totalAmount) {
-                throw ValidationException::withMessages([
-                    'wallet' => 'اعتبار کیف پول برای پرداخت گروهی کافی نیست.',
-                ]);
-            }
+        if ($user->wallet->balance < $totalAmount) {
+            throw ValidationException::withMessages([
+                'wallet' => 'موجودی کیف پول برای پرداخت همه گواهینامه‌ها کافی نیست.',
+            ]);
+        }
+
+        $paidCount   = 0;
+        $failedCount = 0;
+
+        DB::transaction(function () use ($payableCertificates, $payerUserId, &$paidCount, &$failedCount) {
+
 
             foreach ($payableCertificates as $certificate) {
-                $this->payForCertificate($certificate, $payerUserId);
+                try {
+                    $this->payForCertificate($certificate, $payerUserId);
+                    $paidCount++;
+                    }
+                catch (\Throwable $e){
+                    // این پرداخت خاص شکست خورده
+                    $failedCount++;
+                    report($e);
+                    // ادامه بده، کل batch نباید fail شود
+                    continue;
+                }
             }
         });
 
         return new PaymentResult(
-            success: true,
-            message: 'پرداخت گروهی با موفقیت انجام شد.',
-            paidCount: $payableCertificates->count()
+            success: $paidCount > 0,
+            message: $failedCount === 0
+                ? 'پرداخت همه گواهینامه‌ها با موفقیت انجام شد.'
+                : 'پرداخت انجام شد، اما برخی گواهینامه‌ها تسویه نشدند.',
+            paidCount: $paidCount,
+            failedCount: $failedCount,
         );
     }
 }
