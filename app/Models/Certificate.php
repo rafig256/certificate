@@ -48,10 +48,11 @@ class Certificate extends Model
 
         // Signer → رویدادهایی که امضا کرده
         if ($user->hasRole('signer')) {
-            return $query->whereHas('event.signatories', fn ($q) =>
-            $q->where('users.id', $user->id)
-            );
+            return $query->whereHas('event.signatories', function ($q) use ($user) {
+                $q->whereBelongsTo($user);
+            });
         }
+
 
         // User → گواهینامه‌های خودش
         if ($user->hasRole('user')) {
