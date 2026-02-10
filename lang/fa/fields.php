@@ -119,4 +119,8 @@ return [
     'payment_status' => 'وضعیت پرداخت',
     'unpaid' => 'پرداخت نشده',
     'paid' => 'پرداخت شده',
+    'deposit' => 'واریز',
+    'withdraw' => 'برداشت',
+    'refund' => 'برگشت وجه',
+    'adjustment' => 'اصلاح حساب',
     ];

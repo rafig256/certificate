@@ -12,10 +12,20 @@ enum WalletTransactionType :string
     public function label(): string
     {
         return match ($this) {
-            self::Deposit    => 'واریز',
-            self::Withdraw   => 'برداشت',
-            self::Refund     => 'بازگشت وجه',
-            self::Adjustment => 'اصلاح حساب',
+            self::Deposit    => __('fields.deposit'),
+            self::Withdraw   => __('fields.withdraw'),
+            self::Refund     => __('fields.refund'),
+            self::Adjustment => __('fields.adjustment'),
+        };
+    }
+
+    public function filamentColor(): string
+    {
+        return match ($this) {
+            self::Deposit    => 'success',
+            self::Withdraw   => 'danger',
+            self::Refund     => 'info',
+            self::Adjustment => 'warning',
         };
     }
 }

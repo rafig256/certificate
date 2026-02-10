@@ -241,7 +241,10 @@ class UserProfile extends Page implements HasTable, HasInfolists
 
                 Tables\Columns\TextColumn::make('type')
                     ->label('نوع')
-                    ->formatStateUsing(fn (WalletTransactionType $state) => $state->label()),
+                    ->badge()
+                    ->formatStateUsing(fn (WalletTransactionType $state) => $state->label())
+                    ->color(fn(WalletTransactionType $state) => $state->filamentColor())
+                ,
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('تاریخ')
