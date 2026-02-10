@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\WalletTransactionType;
 use Illuminate\Database\Eloquent\Model;
 
 class WalletTransaction extends Model
@@ -9,17 +10,9 @@ class WalletTransaction extends Model
 
     protected $guarded = [];
 
-    public const TYPE_LABELS = [
-        'deposit'     => 'واریز',
-        'withdraw'    => 'برداشت',
-        'refund'      => 'بازگشت وجه',
-        'adjustment'  => 'اصلاح حساب',
+    protected $casts = [
+        'type' => WalletTransactionType::class,
     ];
-
-    public function getTypeLabelAttribute(): string
-    {
-        return self::TYPE_LABELS[$this->type] ?? 'نامشخص';
-    }
 
     public function wallet()
     {

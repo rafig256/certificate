@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Enums\WalletTransactionType;
 use App\Models\CertificateHolder;
 use App\Services\JalaliDateService;
 use Filament\Forms\Components\Fieldset;
@@ -238,8 +239,9 @@ class UserProfile extends Page implements HasTable, HasInfolists
                     ->label('مبلغ')
                     ->formatStateUsing(fn ($state) => number_format($state)),
 
-                Tables\Columns\TextColumn::make('type_label')
-                    ->label('نوع'),
+                Tables\Columns\TextColumn::make('type')
+                    ->label('نوع')
+                    ->formatStateUsing(fn (WalletTransactionType $state) => $state->label()),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('تاریخ')
