@@ -238,14 +238,16 @@ class UserProfile extends Page implements HasTable, HasInfolists
                     ->label('مبلغ')
                     ->formatStateUsing(fn ($state) => number_format($state)),
 
-                Tables\Columns\TextColumn::make('type')
+                Tables\Columns\TextColumn::make('type_label')
                     ->label('نوع'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('تاریخ')
                     ->formatStateUsing(function ($state, $record) {
                         return app(JalaliDateService::class)->toJalali($record->created_at, false);
-                    })
+                    }),
+                Tables\Columns\TextColumn::make('description')
+                ->label(__('fields.description'))
                 ,
             ])
             ->paginated([10, 25, 50]);
