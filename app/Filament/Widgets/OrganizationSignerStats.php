@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Models\Organization;
 use App\Models\Signatory;
 use App\Models\Transaction;
+use App\Models\WalletTransaction;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -20,7 +21,7 @@ class OrganizationSignerStats extends StatsOverviewWidget
         return [
             Stat::make('سازمان‌ها', Organization::count()),
             Stat::make('امضاکنندگان', Signatory::count()),
-            Stat::make('تراکنش ها', Transaction::count())
+            Stat::make('تراکنش ها', WalletTransaction::count())
         ];
     }
 }
