@@ -30,6 +30,7 @@
                     <li class="nav-item"><a class="nav-link" href="#certificates">نمونه گواهینامه</a></li>
                     <li class="nav-item"><a class="nav-link" href="#categories">دسته‌بندی</a></li>
                     <li class="nav-item"><a class="nav-link" href="#services">خدمات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('certificate.verify.form') }}">استعلام گواهی</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">تماس با ما</a></li>
                     <li class="nav-item"><a class="nav-link" href="/admin">ورود</a></li>
                     <li class="nav-item"><a class="nav-link" href="/admin/register">ثبت نام</a></li>

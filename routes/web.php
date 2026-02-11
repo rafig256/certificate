@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\CertificatePublicController;
+use App\Http\Controllers\CertificateVerificationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,5 +19,9 @@ Route::get('/certificates/{certificate:serial}', [CertificatePublicController::c
 //Password Reset
 Route::get('/password-reset', [PasswordResetController::class, 'showForm'])->name('password.request');
 Route::post('/password-reset', [PasswordResetController::class, 'submit'])->name('password.email');
+
+//verify
+Route::get('/verify-certificate', [CertificateVerificationController::class, 'showForm'])->name('certificate.verify.form');
+Route::post('/verify-certificate' , [CertificateVerificationController::class , 'verify'])->name('certificate.verify');
 
 require __DIR__.'/auth.php';
